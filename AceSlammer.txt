@@ -1,0 +1,4 @@
+ME3Tweaks ASI Logger - By Mgamerz
+Ace Slammer v1
+[0.0] Logging to C:\Users\mgame\source\repos\ME2-ASI-Plugins\AceSlammer.txt
+--------------------------------------------------------

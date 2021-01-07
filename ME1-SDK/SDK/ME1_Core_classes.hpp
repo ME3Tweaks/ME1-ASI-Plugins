@@ -14,6 +14,8 @@ namespace SDK
 	//Classes
 	//---------------------------------------------------------------------------
 
+	class UClass;
+	
 	// Class Core.Object
 	// 0x003C
 	class UObject
@@ -48,39 +50,6 @@ namespace SDK
 			}
 			return name;
 		}
-
-		//std::string GetFullName() const;
-
-		std::string UObject::GetFullName()
-		{
-			std::string name = "";
-			if (this->Class && this->Outer)
-			{
-				if (this->Outer->Outer)
-				{
-					name += this->Class->GetName();
-					name += " ";
-					name += this->Outer->Outer->GetName();
-					name += ".";
-					name += this->Outer->GetName();
-					name += ".";
-					name += this->GetName();
-				}
-				else
-				{
-					name += this->Class->GetName();
-					name += " ";
-					name += this->Outer->GetName();
-					name += ".";
-					name += this->GetName();
-				}
-
-				return name;
-			}
-
-			return "(null)";
-		}
-
 
 		template<typename T>
 		static T* FindObject(const std::string& name)
@@ -121,7 +90,7 @@ namespace SDK
 			return ptr;
 		}
 
-
+		std::string UObject::GetFullName();
 		void appScreenWarningMessage(const struct FString& sMsg);
 		void appScreenDebugMessage(const struct FString& sMsg);
 		struct FName GetPackageName();

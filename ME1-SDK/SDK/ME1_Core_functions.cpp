@@ -33,6 +33,36 @@ std::string UObject::GetFullName() const
 	return name;
 }
 
+//inline std::string UObject::GetFullName()
+//{
+//	std::string name = "";
+//	if (this->Class && this->Outer)
+//	{
+//		if (this->Outer->Outer)
+//		{
+//			name += this->Class->GetName();
+//			name += " ";
+//			name += this->Outer->Outer->GetName();
+//			name += ".";
+//			name += this->Outer->GetName();
+//			name += ".";
+//			name += this->GetName();
+//		}
+//		else
+//		{
+//			name += this->Class->GetName();
+//			name += " ";
+//			name += this->Outer->GetName();
+//			name += ".";
+//			name += this->GetName();
+//		}
+//
+//		return name;
+//	}
+//
+//	return "(null)";
+//}
+
 bool UObject::IsA(UClass* cmp) const
 {
 	for (auto super = Class; super; super = static_cast<UClass*>(super->SuperField))

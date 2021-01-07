@@ -35,6 +35,11 @@ public:
 		return Count;
 	};
 
+	inline bool Any()
+	{
+		return Count > 0;
+	}
+
 	inline T& operator[](size_t i)
 	{
 		return Data[i];

@@ -111,6 +111,11 @@
   <ItemGroup>
     <ResourceCompile Include="StreamingLevelsHUD.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ME1SDKLib\ME1SDKLib.vcxproj">
+      <Project>{62c52595-1409-49af-b4c9-212293e82200}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

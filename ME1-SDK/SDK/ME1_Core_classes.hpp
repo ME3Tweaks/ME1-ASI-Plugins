@@ -41,7 +41,7 @@ namespace SDK
 			return *GObjects;
 		}
 
-		inline std::string UObject::GetName() const
+		inline std::string GetName() const
 		{
 			std::string name = Name.GetName();
 			if (Name.Number > 0)
@@ -90,7 +90,7 @@ namespace SDK
 			return ptr;
 		}
 
-		std::string UObject::GetFullName();
+		std::string GetFullName() const;
 		void appScreenWarningMessage(const struct FString& sMsg);
 		void appScreenDebugMessage(const struct FString& sMsg);
 		struct FName GetPackageName();
@@ -365,8 +365,12 @@ namespace SDK
 		bool STATIC_NotEqual_BoolBool(bool A, bool B);
 		bool STATIC_EqualEqual_BoolBool(bool A, bool B);
 		bool STATIC_Not_PreBool(bool A);
-	};
 
+		virtual void ProcessEvent(class UFunction* pFunction, void* pParms, void* pResult = NULL);				// 0x009121D0 (0x108) // Defined in SDK.hpp as its address based
+};
+
+	typedef void(__thiscall* tProcessEvent)(class UObject*, class UFunction*, void*, void*);
+	tProcessEvent ProcessEvent = (tProcessEvent)0x10D3C960;
 
 	// Class Core.Factory
 	// 0x0034 (0x0070 - 0x003C)

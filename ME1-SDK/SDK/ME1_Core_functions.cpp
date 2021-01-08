@@ -1,7241 +1,7242 @@
 // Mass Effect (1.2.20820.0) SDK
 
 #ifdef _MSC_VER
-	#pragma pack(push, 0x4)
+#pragma pack(push, 0x4)
 #endif
 
 #include "ME1_Core_parameters.hpp"
 
 namespace SDK
 {
-//---------------------------------------------------------------------------
-//Functions
-//---------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
+	//Functions
+	//---------------------------------------------------------------------------
 
-std::string UObject::GetFullName() const
-{
-	std::string name;
-
-	if (Class != nullptr)
+	std::string UObject::GetFullName() const
 	{
-		std::string temp;
-		for (auto p = Outer; p; p = p->Outer)
+		std::string name;
+
+		if (Class != nullptr)
 		{
-			temp = p->GetName() + "." + temp;
+			std::string temp;
+			for (auto p = Outer; p; p = p->Outer)
+			{
+				temp = p->GetName() + "." + temp;
+			}
+
+			name = Class->GetName();
+			name += " ";
+			name += temp;
+			name += GetName();
 		}
 
-		name = Class->GetName();
-		name += " ";
-		name += temp;
-		name += GetName();
+		return name;
 	}
 
-	return name;
-}
+	//inline std::string UObject::GetFullName()
+	//{
+	//	std::string name = "";
+	//	if (this->Class && this->Outer)
+	//	{
+	//		if (this->Outer->Outer)
+	//		{
+	//			name += this->Class->GetName();
+	//			name += " ";
+	//			name += this->Outer->Outer->GetName();
+	//			name += ".";
+	//			name += this->Outer->GetName();
+	//			name += ".";
+	//			name += this->GetName();
+	//		}
+	//		else
+	//		{
+	//			name += this->Class->GetName();
+	//			name += " ";
+	//			name += this->Outer->GetName();
+	//			name += ".";
+	//			name += this->GetName();
+	//		}
+	//
+	//		return name;
+	//	}
+	//
+	//	return "(null)";
+	//}
 
-//inline std::string UObject::GetFullName()
-//{
-//	std::string name = "";
-//	if (this->Class && this->Outer)
-//	{
-//		if (this->Outer->Outer)
-//		{
-//			name += this->Class->GetName();
-//			name += " ";
-//			name += this->Outer->Outer->GetName();
-//			name += ".";
-//			name += this->Outer->GetName();
-//			name += ".";
-//			name += this->GetName();
-//		}
-//		else
-//		{
-//			name += this->Class->GetName();
-//			name += " ";
-//			name += this->Outer->GetName();
-//			name += ".";
-//			name += this->GetName();
-//		}
-//
-//		return name;
-//	}
-//
-//	return "(null)";
-//}
-
-bool UObject::IsA(UClass* cmp) const
-{
-	for (auto super = Class; super; super = static_cast<UClass*>(super->SuperField))
+	bool UObject::IsA(UClass* cmp) const
 	{
-		if (super == cmp)
+		for (auto super = Class; super; super = static_cast<UClass*>(super->SuperField))
 		{
-			return true;
+			if (super == cmp)
+			{
+				return true;
+			}
 		}
+
+		return false;
 	}
 
-	return false;
-}
+	// Function Core.Object.appScreenWarningMessage
+	// (Native, Public)
+	// Parameters:
+	// struct FString                 sMsg                           (Parm, NeedCtorLink)
 
-// Function Core.Object.appScreenWarningMessage
-// (Native, Public)
-// Parameters:
-// struct FString                 sMsg                           (Parm, NeedCtorLink)
+	void UObject::appScreenWarningMessage(const struct FString& sMsg)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.appScreenWarningMessage");
 
-void UObject::appScreenWarningMessage(const struct FString& sMsg)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.appScreenWarningMessage");
+		UObject_appScreenWarningMessage_Params params;
+		params.sMsg = sMsg;
 
-	UObject_appScreenWarningMessage_Params params;
-	params.sMsg = sMsg;
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject::ProcessEvent(fn, &params);
 
-	UObject::ProcessEvent(fn, &params);
+		fn->FunctionFlags = flags;
+	}
 
-	fn->FunctionFlags = flags;
-}
 
 
-// Function Core.Object.appScreenDebugMessage
-// (Native, Public)
-// Parameters:
-// struct FString                 sMsg                           (Parm, NeedCtorLink)
 
-void UObject::appScreenDebugMessage(const struct FString& sMsg)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.appScreenDebugMessage");
+	// Function Core.Object.appScreenDebugMessage
+	// (Native, Public)
+	// Parameters:
+	// struct FString                 sMsg                           (Parm, NeedCtorLink)
 
-	UObject_appScreenDebugMessage_Params params;
-	params.sMsg = sMsg;
+	void UObject::appScreenDebugMessage(const struct FString& sMsg)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.appScreenDebugMessage");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_appScreenDebugMessage_Params params;
+		params.sMsg = sMsg;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.GetPackageName
-// (Final, Defined, Public)
-// Parameters:
-// struct FName                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FName UObject::GetPackageName()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetPackageName");
+	// Function Core.Object.GetPackageName
+	// (Final, Defined, Public)
+	// Parameters:
+	// struct FName                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetPackageName_Params params;
+	struct FName UObject::GetPackageName()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetPackageName");
 
-	auto flags = fn->FunctionFlags;
+		UObject_GetPackageName_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.IsPendingKill
-// (Final, Native, Public)
-// Parameters:
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::IsPendingKill()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.IsPendingKill");
+	// Function Core.Object.IsPendingKill
+	// (Final, Native, Public)
+	// Parameters:
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_IsPendingKill_Params params;
+	bool UObject::IsPendingKill()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.IsPendingKill");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_IsPendingKill_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.ByteToFloat
-// (Final, Defined, Simulated, Public)
-// Parameters:
-// unsigned char                  inputByte                      (Parm)
-// bool                           bSigned                        (OptionalParm, Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::ByteToFloat(unsigned char inputByte, bool bSigned)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ByteToFloat");
+	// Function Core.Object.ByteToFloat
+	// (Final, Defined, Simulated, Public)
+	// Parameters:
+	// unsigned char                  inputByte                      (Parm)
+	// bool                           bSigned                        (OptionalParm, Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_ByteToFloat_Params params;
-	params.inputByte = inputByte;
-	params.bSigned = bSigned;
+	float UObject::ByteToFloat(unsigned char inputByte, bool bSigned)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ByteToFloat");
 
-	auto flags = fn->FunctionFlags;
+		UObject_ByteToFloat_Params params;
+		params.inputByte = inputByte;
+		params.bSigned = bSigned;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.FloatToByte
-// (Final, Defined, Simulated, Public)
-// Parameters:
-// float                          inputFloat                     (Parm)
-// bool                           bSigned                        (OptionalParm, Parm)
-// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-unsigned char UObject::FloatToByte(float inputFloat, bool bSigned)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FloatToByte");
+	// Function Core.Object.FloatToByte
+	// (Final, Defined, Simulated, Public)
+	// Parameters:
+	// float                          inputFloat                     (Parm)
+	// bool                           bSigned                        (OptionalParm, Parm)
+	// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_FloatToByte_Params params;
-	params.inputFloat = inputFloat;
-	params.bSigned = bSigned;
+	unsigned char UObject::FloatToByte(float inputFloat, bool bSigned)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FloatToByte");
 
-	auto flags = fn->FunctionFlags;
+		UObject_FloatToByte_Params params;
+		params.inputFloat = inputFloat;
+		params.bSigned = bSigned;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.UnwindHeading
-// (Final, Defined, Simulated, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_UnwindHeading(float A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.UnwindHeading");
+	// Function Core.Object.UnwindHeading
+	// (Final, Defined, Simulated, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_UnwindHeading_Params params;
-	params.A = A;
+	float UObject::STATIC_UnwindHeading(float A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.UnwindHeading");
 
-	auto flags = fn->FunctionFlags;
+		UObject_UnwindHeading_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.FindDeltaAngle
-// (Final, Defined, Simulated, Static, Public)
-// Parameters:
-// float                          A1                             (Parm)
-// float                          A2                             (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_FindDeltaAngle(float A1, float A2)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FindDeltaAngle");
+	// Function Core.Object.FindDeltaAngle
+	// (Final, Defined, Simulated, Static, Public)
+	// Parameters:
+	// float                          A1                             (Parm)
+	// float                          A2                             (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_FindDeltaAngle_Params params;
-	params.A1 = A1;
-	params.A2 = A2;
+	float UObject::STATIC_FindDeltaAngle(float A1, float A2)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FindDeltaAngle");
 
-	auto flags = fn->FunctionFlags;
+		UObject_FindDeltaAngle_Params params;
+		params.A1 = A1;
+		params.A2 = A2;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetHeadingAngle
-// (Final, Defined, Simulated, Static, Public)
-// Parameters:
-// struct FVector                 Dir                            (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_GetHeadingAngle(const struct FVector& Dir)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetHeadingAngle");
+	// Function Core.Object.GetHeadingAngle
+	// (Final, Defined, Simulated, Static, Public)
+	// Parameters:
+	// struct FVector                 Dir                            (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetHeadingAngle_Params params;
-	params.Dir = Dir;
+	float UObject::STATIC_GetHeadingAngle(const struct FVector& Dir)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetHeadingAngle");
 
-	auto flags = fn->FunctionFlags;
+		UObject_GetHeadingAngle_Params params;
+		params.Dir = Dir;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetAngularDegreesFromRadians
-// (Final, Defined, Simulated, Static, Public, HasOutParms)
-// Parameters:
-// struct FVector2D               OutFOV                         (Parm, OutParm)
 
-void UObject::STATIC_GetAngularDegreesFromRadians(struct FVector2D* OutFOV)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetAngularDegreesFromRadians");
+	// Function Core.Object.GetAngularDegreesFromRadians
+	// (Final, Defined, Simulated, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FVector2D               OutFOV                         (Parm, OutParm)
 
-	UObject_GetAngularDegreesFromRadians_Params params;
+	void UObject::STATIC_GetAngularDegreesFromRadians(struct FVector2D* OutFOV)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetAngularDegreesFromRadians");
 
-	auto flags = fn->FunctionFlags;
+		UObject_GetAngularDegreesFromRadians_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (OutFOV != nullptr)
-		*OutFOV = params.OutFOV;
-}
+		fn->FunctionFlags = flags;
 
+		if (OutFOV != nullptr)
+			*OutFOV = params.OutFOV;
+	}
 
-// Function Core.Object.GetAngularFromDotDist
-// (Final, Native, Static, Public, HasOutParms)
-// Parameters:
-// struct FVector2D               OutAngDist                     (Parm, OutParm)
-// struct FVector2D               DotDist                        (Parm)
 
-void UObject::STATIC_GetAngularFromDotDist(const struct FVector2D& DotDist, struct FVector2D* OutAngDist)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetAngularFromDotDist");
+	// Function Core.Object.GetAngularFromDotDist
+	// (Final, Native, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FVector2D               OutAngDist                     (Parm, OutParm)
+	// struct FVector2D               DotDist                        (Parm)
 
-	UObject_GetAngularFromDotDist_Params params;
-	params.DotDist = DotDist;
+	void UObject::STATIC_GetAngularFromDotDist(const struct FVector2D& DotDist, struct FVector2D* OutAngDist)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetAngularFromDotDist");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetAngularFromDotDist_Params params;
+		params.DotDist = DotDist;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (OutAngDist != nullptr)
-		*OutAngDist = params.OutAngDist;
-}
+		fn->FunctionFlags = flags;
 
+		if (OutAngDist != nullptr)
+			*OutAngDist = params.OutAngDist;
+	}
 
-// Function Core.Object.GetAngularDistance
-// (Final, Native, Static, Public, HasOutParms)
-// Parameters:
-// struct FVector2D               OutAngularDist                 (Parm, OutParm)
-// struct FVector                 Direction                      (Parm)
-// struct FVector                 AxisX                          (Parm)
-// struct FVector                 AxisY                          (Parm)
-// struct FVector                 AxisZ                          (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_GetAngularDistance(const struct FVector& Direction, const struct FVector& AxisX, const struct FVector& AxisY, const struct FVector& AxisZ, struct FVector2D* OutAngularDist)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetAngularDistance");
+	// Function Core.Object.GetAngularDistance
+	// (Final, Native, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FVector2D               OutAngularDist                 (Parm, OutParm)
+	// struct FVector                 Direction                      (Parm)
+	// struct FVector                 AxisX                          (Parm)
+	// struct FVector                 AxisY                          (Parm)
+	// struct FVector                 AxisZ                          (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetAngularDistance_Params params;
-	params.Direction = Direction;
-	params.AxisX = AxisX;
-	params.AxisY = AxisY;
-	params.AxisZ = AxisZ;
+	bool UObject::STATIC_GetAngularDistance(const struct FVector& Direction, const struct FVector& AxisX, const struct FVector& AxisY, const struct FVector& AxisZ, struct FVector2D* OutAngularDist)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetAngularDistance");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetAngularDistance_Params params;
+		params.Direction = Direction;
+		params.AxisX = AxisX;
+		params.AxisY = AxisY;
+		params.AxisZ = AxisZ;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (OutAngularDist != nullptr)
-		*OutAngularDist = params.OutAngularDist;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (OutAngularDist != nullptr)
+			*OutAngularDist = params.OutAngularDist;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetDotDistance
-// (Final, Native, Static, Public, HasOutParms)
-// Parameters:
-// struct FVector2D               OutDotDist                     (Parm, OutParm)
-// struct FVector                 Direction                      (Parm)
-// struct FVector                 AxisX                          (Parm)
-// struct FVector                 AxisY                          (Parm)
-// struct FVector                 AxisZ                          (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_GetDotDistance(const struct FVector& Direction, const struct FVector& AxisX, const struct FVector& AxisY, const struct FVector& AxisZ, struct FVector2D* OutDotDist)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetDotDistance");
+	// Function Core.Object.GetDotDistance
+	// (Final, Native, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FVector2D               OutDotDist                     (Parm, OutParm)
+	// struct FVector                 Direction                      (Parm)
+	// struct FVector                 AxisX                          (Parm)
+	// struct FVector                 AxisY                          (Parm)
+	// struct FVector                 AxisZ                          (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetDotDistance_Params params;
-	params.Direction = Direction;
-	params.AxisX = AxisX;
-	params.AxisY = AxisY;
-	params.AxisZ = AxisZ;
+	bool UObject::STATIC_GetDotDistance(const struct FVector& Direction, const struct FVector& AxisX, const struct FVector& AxisY, const struct FVector& AxisZ, struct FVector2D* OutDotDist)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetDotDistance");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetDotDistance_Params params;
+		params.Direction = Direction;
+		params.AxisX = AxisX;
+		params.AxisY = AxisY;
+		params.AxisZ = AxisZ;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (OutDotDist != nullptr)
-		*OutDotDist = params.OutDotDist;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (OutDotDist != nullptr)
+			*OutDotDist = params.OutDotDist;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.PointInBox
-// (Final, Defined, Static, Public, HasDefaults)
-// Parameters:
-// struct FVector                 Point                          (Parm)
-// struct FVector                 Location                       (Parm)
-// struct FVector                 Extent                         (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_PointInBox(const struct FVector& Point, const struct FVector& Location, const struct FVector& Extent)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PointInBox");
+	// Function Core.Object.PointInBox
+	// (Final, Defined, Static, Public, HasDefaults)
+	// Parameters:
+	// struct FVector                 Point                          (Parm)
+	// struct FVector                 Location                       (Parm)
+	// struct FVector                 Extent                         (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_PointInBox_Params params;
-	params.Point = Point;
-	params.Location = Location;
-	params.Extent = Extent;
+	bool UObject::STATIC_PointInBox(const struct FVector& Point, const struct FVector& Location, const struct FVector& Extent)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PointInBox");
 
-	auto flags = fn->FunctionFlags;
+		UObject_PointInBox_Params params;
+		params.Point = Point;
+		params.Location = Location;
+		params.Extent = Extent;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.PointDistToPlane
-// (Final, Defined, Simulated, Public, HasOutParms, HasDefaults)
-// Parameters:
-// struct FVector                 Point                          (Parm)
-// struct FRotator                Orientation                    (Parm)
-// struct FVector                 Origin                         (Parm)
-// struct FVector                 out_ClosestPoint               (OptionalParm, Parm, OutParm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::PointDistToPlane(const struct FVector& Point, const struct FRotator& Orientation, const struct FVector& Origin, struct FVector* out_ClosestPoint)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PointDistToPlane");
+	// Function Core.Object.PointDistToPlane
+	// (Final, Defined, Simulated, Public, HasOutParms, HasDefaults)
+	// Parameters:
+	// struct FVector                 Point                          (Parm)
+	// struct FRotator                Orientation                    (Parm)
+	// struct FVector                 Origin                         (Parm)
+	// struct FVector                 out_ClosestPoint               (OptionalParm, Parm, OutParm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_PointDistToPlane_Params params;
-	params.Point = Point;
-	params.Orientation = Orientation;
-	params.Origin = Origin;
+	float UObject::PointDistToPlane(const struct FVector& Point, const struct FRotator& Orientation, const struct FVector& Origin, struct FVector* out_ClosestPoint)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PointDistToPlane");
 
-	auto flags = fn->FunctionFlags;
+		UObject_PointDistToPlane_Params params;
+		params.Point = Point;
+		params.Orientation = Orientation;
+		params.Origin = Origin;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (out_ClosestPoint != nullptr)
-		*out_ClosestPoint = params.out_ClosestPoint;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (out_ClosestPoint != nullptr)
+			*out_ClosestPoint = params.out_ClosestPoint;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.PointDistToLine
-// (Final, Native, Public, HasOutParms)
-// Parameters:
-// struct FVector                 Point                          (Parm)
-// struct FVector                 Line                           (Parm)
-// struct FVector                 Origin                         (Parm)
-// struct FVector                 OutClosestPoint                (OptionalParm, Parm, OutParm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::PointDistToLine(const struct FVector& Point, const struct FVector& Line, const struct FVector& Origin, struct FVector* OutClosestPoint)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PointDistToLine");
+	// Function Core.Object.PointDistToLine
+	// (Final, Native, Public, HasOutParms)
+	// Parameters:
+	// struct FVector                 Point                          (Parm)
+	// struct FVector                 Line                           (Parm)
+	// struct FVector                 Origin                         (Parm)
+	// struct FVector                 OutClosestPoint                (OptionalParm, Parm, OutParm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_PointDistToLine_Params params;
-	params.Point = Point;
-	params.Line = Line;
-	params.Origin = Origin;
+	float UObject::PointDistToLine(const struct FVector& Point, const struct FVector& Line, const struct FVector& Origin, struct FVector* OutClosestPoint)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PointDistToLine");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_PointDistToLine_Params params;
+		params.Point = Point;
+		params.Line = Line;
+		params.Origin = Origin;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (OutClosestPoint != nullptr)
-		*OutClosestPoint = params.OutClosestPoint;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (OutClosestPoint != nullptr)
+			*OutClosestPoint = params.OutClosestPoint;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetPerObjectConfigSections
-// (Final, Native, Static, Public, HasOutParms)
-// Parameters:
-// class UClass*                  SearchClass                    (Parm)
-// TArray<struct FString>         out_SectionNames               (Parm, OutParm, NeedCtorLink)
-// class UObject*                 ObjectOuter                    (OptionalParm, Parm)
-// int                            MaxResults                     (OptionalParm, Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_GetPerObjectConfigSections(class UClass* SearchClass, class UObject* ObjectOuter, int MaxResults, TArray<struct FString>* out_SectionNames)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetPerObjectConfigSections");
+	// Function Core.Object.GetPerObjectConfigSections
+	// (Final, Native, Static, Public, HasOutParms)
+	// Parameters:
+	// class UClass*                  SearchClass                    (Parm)
+	// TArray<struct FString>         out_SectionNames               (Parm, OutParm, NeedCtorLink)
+	// class UObject*                 ObjectOuter                    (OptionalParm, Parm)
+	// int                            MaxResults                     (OptionalParm, Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetPerObjectConfigSections_Params params;
-	params.SearchClass = SearchClass;
-	params.ObjectOuter = ObjectOuter;
-	params.MaxResults = MaxResults;
+	bool UObject::STATIC_GetPerObjectConfigSections(class UClass* SearchClass, class UObject* ObjectOuter, int MaxResults, TArray<struct FString>* out_SectionNames)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetPerObjectConfigSections");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetPerObjectConfigSections_Params params;
+		params.SearchClass = SearchClass;
+		params.ObjectOuter = ObjectOuter;
+		params.MaxResults = MaxResults;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (out_SectionNames != nullptr)
-		*out_SectionNames = params.out_SectionNames;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (out_SectionNames != nullptr)
+			*out_SectionNames = params.out_SectionNames;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.StaticSaveConfig
-// (Final, Native, Static, Public)
 
-void UObject::STATIC_StaticSaveConfig()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.StaticSaveConfig");
+	// Function Core.Object.StaticSaveConfig
+	// (Final, Native, Static, Public)
 
-	UObject_StaticSaveConfig_Params params;
+	void UObject::STATIC_StaticSaveConfig()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.StaticSaveConfig");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_StaticSaveConfig_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.SaveConfig
-// (Final, Native, Public)
 
-void UObject::SaveConfig()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SaveConfig");
+	// Function Core.Object.SaveConfig
+	// (Final, Native, Public)
 
-	UObject_SaveConfig_Params params;
+	void UObject::SaveConfig()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SaveConfig");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_SaveConfig_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.FindObject
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FString                 ObjectName                     (Parm, NeedCtorLink)
-// class UClass*                  ObjectClass                    (Parm)
-// class UObject*                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-class UObject* UObject::STATIC_FindObject(const struct FString& ObjectName, class UClass* ObjectClass)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FindObject");
+	// Function Core.Object.FindObject
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FString                 ObjectName                     (Parm, NeedCtorLink)
+	// class UClass*                  ObjectClass                    (Parm)
+	// class UObject*                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_FindObject_Params params;
-	params.ObjectName = ObjectName;
-	params.ObjectClass = ObjectClass;
+	class UObject* UObject::STATIC_FindObject(const struct FString& ObjectName, class UClass* ObjectClass)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FindObject");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_FindObject_Params params;
+		params.ObjectName = ObjectName;
+		params.ObjectClass = ObjectClass;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.DynamicLoadObject
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FString                 ObjectName                     (Parm, NeedCtorLink)
-// class UClass*                  ObjectClass                    (Parm)
-// bool                           MayFail                        (OptionalParm, Parm)
-// class UObject*                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-class UObject* UObject::STATIC_DynamicLoadObject(const struct FString& ObjectName, class UClass* ObjectClass, bool MayFail)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DynamicLoadObject");
+	// Function Core.Object.DynamicLoadObject
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FString                 ObjectName                     (Parm, NeedCtorLink)
+	// class UClass*                  ObjectClass                    (Parm)
+	// bool                           MayFail                        (OptionalParm, Parm)
+	// class UObject*                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_DynamicLoadObject_Params params;
-	params.ObjectName = ObjectName;
-	params.ObjectClass = ObjectClass;
-	params.MayFail = MayFail;
+	class UObject* UObject::STATIC_DynamicLoadObject(const struct FString& ObjectName, class UClass* ObjectClass, bool MayFail)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DynamicLoadObject");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_DynamicLoadObject_Params params;
+		params.ObjectName = ObjectName;
+		params.ObjectClass = ObjectClass;
+		params.MayFail = MayFail;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetEnumIndex
-// (Final, Native, Static, Public)
-// Parameters:
-// class UObject*                 E                              (Parm)
-// struct FName                   valuename                      (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_GetEnumIndex(class UObject* E, const struct FName& valuename)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetEnumIndex");
+	// Function Core.Object.GetEnumIndex
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// class UObject*                 E                              (Parm)
+	// struct FName                   valuename                      (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetEnumIndex_Params params;
-	params.E = E;
-	params.valuename = valuename;
+	int UObject::STATIC_GetEnumIndex(class UObject* E, const struct FName& valuename)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetEnumIndex");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetEnumIndex_Params params;
+		params.E = E;
+		params.valuename = valuename;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetEnum
-// (Final, Native, Static, Public)
-// Parameters:
-// class UObject*                 E                              (Parm)
-// int                            I                              (Parm, CoerceParm)
-// struct FName                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FName UObject::STATIC_GetEnum(class UObject* E, int I)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetEnum");
+	// Function Core.Object.GetEnum
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// class UObject*                 E                              (Parm)
+	// int                            I                              (Parm, CoerceParm)
+	// struct FName                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetEnum_Params params;
-	params.E = E;
-	params.I = I;
+	struct FName UObject::STATIC_GetEnum(class UObject* E, int I)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetEnum");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetEnum_Params params;
+		params.E = E;
+		params.I = I;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Disable
-// (Final, Native, Public)
-// Parameters:
-// struct FName                   ProbeFunc                      (Parm)
 
-void UObject::Disable(const struct FName& ProbeFunc)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Disable");
+	// Function Core.Object.Disable
+	// (Final, Native, Public)
+	// Parameters:
+	// struct FName                   ProbeFunc                      (Parm)
 
-	UObject_Disable_Params params;
-	params.ProbeFunc = ProbeFunc;
+	void UObject::Disable(const struct FName& ProbeFunc)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Disable");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Disable_Params params;
+		params.ProbeFunc = ProbeFunc;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.Enable
-// (Final, Native, Public)
-// Parameters:
-// struct FName                   ProbeFunc                      (Parm)
 
-void UObject::Enable(const struct FName& ProbeFunc)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Enable");
+	// Function Core.Object.Enable
+	// (Final, Native, Public)
+	// Parameters:
+	// struct FName                   ProbeFunc                      (Parm)
 
-	UObject_Enable_Params params;
-	params.ProbeFunc = ProbeFunc;
+	void UObject::Enable(const struct FName& ProbeFunc)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Enable");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Enable_Params params;
+		params.ProbeFunc = ProbeFunc;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.ContinuedState
-// (Event, Public)
 
-void UObject::ContinuedState()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ContinuedState");
+	// Function Core.Object.ContinuedState
+	// (Event, Public)
 
-	UObject_ContinuedState_Params params;
+	void UObject::ContinuedState()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ContinuedState");
 
-	auto flags = fn->FunctionFlags;
+		UObject_ContinuedState_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.PausedState
-// (Event, Public)
 
-void UObject::PausedState()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PausedState");
+	// Function Core.Object.PausedState
+	// (Event, Public)
 
-	UObject_PausedState_Params params;
+	void UObject::PausedState()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PausedState");
 
-	auto flags = fn->FunctionFlags;
+		UObject_PausedState_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.PoppedState
-// (Event, Public)
 
-void UObject::PoppedState()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PoppedState");
+	// Function Core.Object.PoppedState
+	// (Event, Public)
 
-	UObject_PoppedState_Params params;
+	void UObject::PoppedState()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PoppedState");
 
-	auto flags = fn->FunctionFlags;
+		UObject_PoppedState_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.PushedState
-// (Event, Public)
 
-void UObject::PushedState()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PushedState");
+	// Function Core.Object.PushedState
+	// (Event, Public)
 
-	UObject_PushedState_Params params;
+	void UObject::PushedState()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PushedState");
 
-	auto flags = fn->FunctionFlags;
+		UObject_PushedState_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.EndState
-// (Event, Public)
-// Parameters:
-// struct FName                   NextStateName                  (Parm)
 
-void UObject::EndState(const struct FName& NextStateName)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EndState");
+	// Function Core.Object.EndState
+	// (Event, Public)
+	// Parameters:
+	// struct FName                   NextStateName                  (Parm)
 
-	UObject_EndState_Params params;
-	params.NextStateName = NextStateName;
+	void UObject::EndState(const struct FName& NextStateName)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EndState");
 
-	auto flags = fn->FunctionFlags;
+		UObject_EndState_Params params;
+		params.NextStateName = NextStateName;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.BeginState
-// (Event, Public)
-// Parameters:
-// struct FName                   PreviousStateName              (Parm)
 
-void UObject::BeginState(const struct FName& PreviousStateName)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.BeginState");
+	// Function Core.Object.BeginState
+	// (Event, Public)
+	// Parameters:
+	// struct FName                   PreviousStateName              (Parm)
 
-	UObject_BeginState_Params params;
-	params.PreviousStateName = PreviousStateName;
+	void UObject::BeginState(const struct FName& PreviousStateName)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.BeginState");
 
-	auto flags = fn->FunctionFlags;
+		UObject_BeginState_Params params;
+		params.PreviousStateName = PreviousStateName;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.DumpStateStack
-// (Final, Native, Public)
 
-void UObject::DumpStateStack()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DumpStateStack");
+	// Function Core.Object.DumpStateStack
+	// (Final, Native, Public)
 
-	UObject_DumpStateStack_Params params;
+	void UObject::DumpStateStack()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DumpStateStack");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_DumpStateStack_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.PopState
-// (Final, Native, Public)
-// Parameters:
-// bool                           bPopAll                        (OptionalParm, Parm)
 
-void UObject::PopState(bool bPopAll)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PopState");
+	// Function Core.Object.PopState
+	// (Final, Native, Public)
+	// Parameters:
+	// bool                           bPopAll                        (OptionalParm, Parm)
 
-	UObject_PopState_Params params;
-	params.bPopAll = bPopAll;
+	void UObject::PopState(bool bPopAll)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PopState");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_PopState_Params params;
+		params.bPopAll = bPopAll;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.PushState
-// (Final, Native, Public)
-// Parameters:
-// struct FName                   NewState                       (Parm)
-// struct FName                   NewLabel                       (OptionalParm, Parm)
 
-void UObject::PushState(const struct FName& NewState, const struct FName& NewLabel)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PushState");
+	// Function Core.Object.PushState
+	// (Final, Native, Public)
+	// Parameters:
+	// struct FName                   NewState                       (Parm)
+	// struct FName                   NewLabel                       (OptionalParm, Parm)
 
-	UObject_PushState_Params params;
-	params.NewState = NewState;
-	params.NewLabel = NewLabel;
+	void UObject::PushState(const struct FName& NewState, const struct FName& NewLabel)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PushState");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_PushState_Params params;
+		params.NewState = NewState;
+		params.NewLabel = NewLabel;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.GetStateName
-// (Final, Native, Public)
-// Parameters:
-// struct FName                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FName UObject::GetStateName()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetStateName");
+	// Function Core.Object.GetStateName
+	// (Final, Native, Public)
+	// Parameters:
+	// struct FName                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetStateName_Params params;
+	struct FName UObject::GetStateName()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetStateName");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetStateName_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.IsChildState
-// (Final, Native, Public)
-// Parameters:
-// struct FName                   TestState                      (Parm)
-// struct FName                   TestParentState                (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::IsChildState(const struct FName& TestState, const struct FName& TestParentState)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.IsChildState");
+	// Function Core.Object.IsChildState
+	// (Final, Native, Public)
+	// Parameters:
+	// struct FName                   TestState                      (Parm)
+	// struct FName                   TestParentState                (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_IsChildState_Params params;
-	params.TestState = TestState;
-	params.TestParentState = TestParentState;
+	bool UObject::IsChildState(const struct FName& TestState, const struct FName& TestParentState)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.IsChildState");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_IsChildState_Params params;
+		params.TestState = TestState;
+		params.TestParentState = TestParentState;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.IsInState
-// (Final, Native, Public)
-// Parameters:
-// struct FName                   TestState                      (Parm)
-// bool                           bTestStateStack                (OptionalParm, Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::IsInState(const struct FName& TestState, bool bTestStateStack)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.IsInState");
+	// Function Core.Object.IsInState
+	// (Final, Native, Public)
+	// Parameters:
+	// struct FName                   TestState                      (Parm)
+	// bool                           bTestStateStack                (OptionalParm, Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_IsInState_Params params;
-	params.TestState = TestState;
-	params.bTestStateStack = bTestStateStack;
+	bool UObject::IsInState(const struct FName& TestState, bool bTestStateStack)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.IsInState");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_IsInState_Params params;
+		params.TestState = TestState;
+		params.bTestStateStack = bTestStateStack;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GotoState
-// (Final, Native, Public)
-// Parameters:
-// struct FName                   NewState                       (OptionalParm, Parm)
-// struct FName                   Label                          (OptionalParm, Parm)
-// bool                           bForceEvents                   (OptionalParm, Parm)
-// bool                           bKeepStack                     (OptionalParm, Parm)
 
-void UObject::GotoState(const struct FName& NewState, const struct FName& Label, bool bForceEvents, bool bKeepStack)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GotoState");
+	// Function Core.Object.GotoState
+	// (Final, Native, Public)
+	// Parameters:
+	// struct FName                   NewState                       (OptionalParm, Parm)
+	// struct FName                   Label                          (OptionalParm, Parm)
+	// bool                           bForceEvents                   (OptionalParm, Parm)
+	// bool                           bKeepStack                     (OptionalParm, Parm)
 
-	UObject_GotoState_Params params;
-	params.NewState = NewState;
-	params.Label = Label;
-	params.bForceEvents = bForceEvents;
-	params.bKeepStack = bKeepStack;
+	void UObject::GotoState(const struct FName& NewState, const struct FName& Label, bool bForceEvents, bool bKeepStack)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GotoState");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GotoState_Params params;
+		params.NewState = NewState;
+		params.Label = Label;
+		params.bForceEvents = bForceEvents;
+		params.bKeepStack = bKeepStack;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.ReadSaveObject
-// (Defined, Event, Public)
-// Parameters:
-// class UBioBaseSaveObject*      Save                           (Parm)
 
-void UObject::ReadSaveObject(class UBioBaseSaveObject* Save)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ReadSaveObject");
+	// Function Core.Object.ReadSaveObject
+	// (Defined, Event, Public)
+	// Parameters:
+	// class UBioBaseSaveObject*      Save                           (Parm)
 
-	UObject_ReadSaveObject_Params params;
-	params.Save = Save;
+	void UObject::ReadSaveObject(class UBioBaseSaveObject* Save)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ReadSaveObject");
 
-	auto flags = fn->FunctionFlags;
+		UObject_ReadSaveObject_Params params;
+		params.Save = Save;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.WriteSaveObject
-// (Defined, Event, Public)
-// Parameters:
-// class UObject*                 InOuter                        (Parm)
-// class UBioBaseSaveObject*      Save                           (OptionalParm, Parm)
-// class UBioBaseSaveObject*      ReturnValue                    (Parm, OutParm, ReturnParm)
 
-class UBioBaseSaveObject* UObject::WriteSaveObject(class UObject* InOuter, class UBioBaseSaveObject* Save)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.WriteSaveObject");
+	// Function Core.Object.WriteSaveObject
+	// (Defined, Event, Public)
+	// Parameters:
+	// class UObject*                 InOuter                        (Parm)
+	// class UBioBaseSaveObject*      Save                           (OptionalParm, Parm)
+	// class UBioBaseSaveObject*      ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_WriteSaveObject_Params params;
-	params.InOuter = InOuter;
-	params.Save = Save;
+	class UBioBaseSaveObject* UObject::WriteSaveObject(class UObject* InOuter, class UBioBaseSaveObject* Save)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.WriteSaveObject");
 
-	auto flags = fn->FunctionFlags;
+		UObject_WriteSaveObject_Params params;
+		params.InOuter = InOuter;
+		params.Save = Save;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetSaveObjectClass
-// (Defined, Static, Public)
-// Parameters:
-// class UClass*                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-class UClass* UObject::STATIC_GetSaveObjectClass()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetSaveObjectClass");
+	// Function Core.Object.GetSaveObjectClass
+	// (Defined, Static, Public)
+	// Parameters:
+	// class UClass*                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetSaveObjectClass_Params params;
+	class UClass* UObject::STATIC_GetSaveObjectClass()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetSaveObjectClass");
 
-	auto flags = fn->FunctionFlags;
+		UObject_GetSaveObjectClass_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.CopyToSaveObject
-// (Native, Public)
-// Parameters:
-// class UBioBaseSaveObject*      Save                           (Parm)
 
-void UObject::CopyToSaveObject(class UBioBaseSaveObject* Save)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.CopyToSaveObject");
+	// Function Core.Object.CopyToSaveObject
+	// (Native, Public)
+	// Parameters:
+	// class UBioBaseSaveObject*      Save                           (Parm)
 
-	UObject_CopyToSaveObject_Params params;
-	params.Save = Save;
+	void UObject::CopyToSaveObject(class UBioBaseSaveObject* Save)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.CopyToSaveObject");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_CopyToSaveObject_Params params;
+		params.Save = Save;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.CopyFromSaveObject
-// (Native, Public)
-// Parameters:
-// class UBioBaseSaveObject*      Save                           (Parm)
 
-void UObject::CopyFromSaveObject(class UBioBaseSaveObject* Save)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.CopyFromSaveObject");
+	// Function Core.Object.CopyFromSaveObject
+	// (Native, Public)
+	// Parameters:
+	// class UBioBaseSaveObject*      Save                           (Parm)
 
-	UObject_CopyFromSaveObject_Params params;
-	params.Save = Save;
+	void UObject::CopyFromSaveObject(class UBioBaseSaveObject* Save)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.CopyFromSaveObject");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_CopyFromSaveObject_Params params;
+		params.Save = Save;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.BioDuplicate
-// (Final, Native, Public)
-// Parameters:
-// class UObject*                 DupObject                      (Parm)
-// class UObject*                 InOuter                        (OptionalParm, Parm)
-// class UObject*                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-class UObject* UObject::BioDuplicate(class UObject* DupObject, class UObject* InOuter)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.BioDuplicate");
+	// Function Core.Object.BioDuplicate
+	// (Final, Native, Public)
+	// Parameters:
+	// class UObject*                 DupObject                      (Parm)
+	// class UObject*                 InOuter                        (OptionalParm, Parm)
+	// class UObject*                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_BioDuplicate_Params params;
-	params.DupObject = DupObject;
-	params.InOuter = InOuter;
+	class UObject* UObject::BioDuplicate(class UObject* DupObject, class UObject* InOuter)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.BioDuplicate");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_BioDuplicate_Params params;
+		params.DupObject = DupObject;
+		params.InOuter = InOuter;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.BioIsXBox
-// (Final, Native, Static, Public)
-// Parameters:
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_BioIsXBox()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.BioIsXBox");
+	// Function Core.Object.BioIsXBox
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_BioIsXBox_Params params;
+	bool UObject::STATIC_BioIsXBox()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.BioIsXBox");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_BioIsXBox_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.BioIsDebug
-// (Final, Native, Static, Public)
-// Parameters:
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_BioIsDebug()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.BioIsDebug");
+	// Function Core.Object.BioIsDebug
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_BioIsDebug_Params params;
+	bool UObject::STATIC_BioIsDebug()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.BioIsDebug");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_BioIsDebug_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.BioIsFinal
-// (Final, Native, Static, Public)
-// Parameters:
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_BioIsFinal()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.BioIsFinal");
+	// Function Core.Object.BioIsFinal
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_BioIsFinal_Params params;
+	bool UObject::STATIC_BioIsFinal()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.BioIsFinal");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_BioIsFinal_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.IsUTracing
-// (Final, Native, Static, Public)
-// Parameters:
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_IsUTracing()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.IsUTracing");
+	// Function Core.Object.IsUTracing
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_IsUTracing_Params params;
+	bool UObject::STATIC_IsUTracing()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.IsUTracing");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_IsUTracing_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.SetUTracing
-// (Final, Native, Static, Public)
-// Parameters:
-// bool                           bShouldUTrace                  (Parm)
 
-void UObject::STATIC_SetUTracing(bool bShouldUTrace)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SetUTracing");
+	// Function Core.Object.SetUTracing
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// bool                           bShouldUTrace                  (Parm)
 
-	UObject_SetUTracing_Params params;
-	params.bShouldUTrace = bShouldUTrace;
+	void UObject::STATIC_SetUTracing(bool bShouldUTrace)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SetUTracing");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_SetUTracing_Params params;
+		params.bShouldUTrace = bShouldUTrace;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.GetFuncName
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FName                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FName UObject::STATIC_GetFuncName()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetFuncName");
+	// Function Core.Object.GetFuncName
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FName                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetFuncName_Params params;
+	struct FName UObject::STATIC_GetFuncName()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetFuncName");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetFuncName_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.ScriptTrace
-// (Final, Native, Static, Public)
 
-void UObject::STATIC_ScriptTrace()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ScriptTrace");
+	// Function Core.Object.ScriptTrace
+	// (Final, Native, Static, Public)
 
-	UObject_ScriptTrace_Params params;
+	void UObject::STATIC_ScriptTrace()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ScriptTrace");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_ScriptTrace_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.Localize
-// (Native, Static, Public)
-// Parameters:
-// struct FString                 SectionName                    (Parm, NeedCtorLink)
-// struct FString                 KeyName                        (Parm, NeedCtorLink)
-// struct FString                 PackageName                    (Parm, NeedCtorLink)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_Localize(const struct FString& SectionName, const struct FString& KeyName, const struct FString& PackageName)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Localize");
+	// Function Core.Object.Localize
+	// (Native, Static, Public)
+	// Parameters:
+	// struct FString                 SectionName                    (Parm, NeedCtorLink)
+	// struct FString                 KeyName                        (Parm, NeedCtorLink)
+	// struct FString                 PackageName                    (Parm, NeedCtorLink)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_Localize_Params params;
-	params.SectionName = SectionName;
-	params.KeyName = KeyName;
-	params.PackageName = PackageName;
+	struct FString UObject::STATIC_Localize(const struct FString& SectionName, const struct FString& KeyName, const struct FString& PackageName)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Localize");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Localize_Params params;
+		params.SectionName = SectionName;
+		params.KeyName = KeyName;
+		params.PackageName = PackageName;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.WarnInternal
-// (Final, Native, Static, Private)
-// Parameters:
-// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
 
-void UObject::STATIC_WarnInternal(const struct FString& S)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.WarnInternal");
+	// Function Core.Object.WarnInternal
+	// (Final, Native, Static, Private)
+	// Parameters:
+	// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
 
-	UObject_WarnInternal_Params params;
-	params.S = S;
+	void UObject::STATIC_WarnInternal(const struct FString& S)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.WarnInternal");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_WarnInternal_Params params;
+		params.S = S;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.LogInternal
-// (Final, Native, Static, Private)
-// Parameters:
-// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
-// struct FName                   Tag                            (OptionalParm, Parm)
 
-void UObject::STATIC_LogInternal(const struct FString& S, const struct FName& Tag)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.LogInternal");
+	// Function Core.Object.LogInternal
+	// (Final, Native, Static, Private)
+	// Parameters:
+	// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
+	// struct FName                   Tag                            (OptionalParm, Parm)
 
-	UObject_LogInternal_Params params;
-	params.S = S;
-	params.Tag = Tag;
+	void UObject::STATIC_LogInternal(const struct FString& S, const struct FName& Tag)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.LogInternal");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_LogInternal_Params params;
+		params.S = S;
+		params.Tag = Tag;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.Subtract_LinearColorLinearColor
-// (Final, Defined, Operator, Static, Public)
-// Parameters:
-// struct FLinearColor            A                              (Parm)
-// struct FLinearColor            B                              (Parm)
-// struct FLinearColor            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FLinearColor UObject::STATIC_Subtract_LinearColorLinearColor(const struct FLinearColor& A, const struct FLinearColor& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_LinearColorLinearColor");
+	// Function Core.Object.Subtract_LinearColorLinearColor
+	// (Final, Defined, Operator, Static, Public)
+	// Parameters:
+	// struct FLinearColor            A                              (Parm)
+	// struct FLinearColor            B                              (Parm)
+	// struct FLinearColor            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Subtract_LinearColorLinearColor_Params params;
-	params.A = A;
-	params.B = B;
+	struct FLinearColor UObject::STATIC_Subtract_LinearColorLinearColor(const struct FLinearColor& A, const struct FLinearColor& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_LinearColorLinearColor");
 
-	auto flags = fn->FunctionFlags;
+		UObject_Subtract_LinearColorLinearColor_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Multiply_LinearColorFloat
-// (Final, Defined, Operator, Static, Public)
-// Parameters:
-// struct FLinearColor            LC                             (Parm)
-// float                          Mult                           (Parm)
-// struct FLinearColor            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FLinearColor UObject::STATIC_Multiply_LinearColorFloat(const struct FLinearColor& LC, float Mult)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_LinearColorFloat");
+	// Function Core.Object.Multiply_LinearColorFloat
+	// (Final, Defined, Operator, Static, Public)
+	// Parameters:
+	// struct FLinearColor            LC                             (Parm)
+	// float                          Mult                           (Parm)
+	// struct FLinearColor            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Multiply_LinearColorFloat_Params params;
-	params.LC = LC;
-	params.Mult = Mult;
+	struct FLinearColor UObject::STATIC_Multiply_LinearColorFloat(const struct FLinearColor& LC, float Mult)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_LinearColorFloat");
 
-	auto flags = fn->FunctionFlags;
+		UObject_Multiply_LinearColorFloat_Params params;
+		params.LC = LC;
+		params.Mult = Mult;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.ColorToLinearColor
-// (Final, Defined, Static, Public)
-// Parameters:
-// struct FColor                  OldColor                       (Parm)
-// struct FLinearColor            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FLinearColor UObject::STATIC_ColorToLinearColor(const struct FColor& OldColor)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ColorToLinearColor");
+	// Function Core.Object.ColorToLinearColor
+	// (Final, Defined, Static, Public)
+	// Parameters:
+	// struct FColor                  OldColor                       (Parm)
+	// struct FLinearColor            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_ColorToLinearColor_Params params;
-	params.OldColor = OldColor;
+	struct FLinearColor UObject::STATIC_ColorToLinearColor(const struct FColor& OldColor)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ColorToLinearColor");
 
-	auto flags = fn->FunctionFlags;
+		UObject_ColorToLinearColor_Params params;
+		params.OldColor = OldColor;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.MakeLinearColor
-// (Final, Defined, Static, Public, HasDefaults)
-// Parameters:
-// float                          R                              (Parm)
-// float                          G                              (Parm)
-// float                          B                              (Parm)
-// float                          A                              (Parm)
-// struct FLinearColor            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FLinearColor UObject::STATIC_MakeLinearColor(float R, float G, float B, float A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MakeLinearColor");
+	// Function Core.Object.MakeLinearColor
+	// (Final, Defined, Static, Public, HasDefaults)
+	// Parameters:
+	// float                          R                              (Parm)
+	// float                          G                              (Parm)
+	// float                          B                              (Parm)
+	// float                          A                              (Parm)
+	// struct FLinearColor            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_MakeLinearColor_Params params;
-	params.R = R;
-	params.G = G;
-	params.B = B;
-	params.A = A;
+	struct FLinearColor UObject::STATIC_MakeLinearColor(float R, float G, float B, float A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MakeLinearColor");
 
-	auto flags = fn->FunctionFlags;
+		UObject_MakeLinearColor_Params params;
+		params.R = R;
+		params.G = G;
+		params.B = B;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.MakeColor
-// (Final, Defined, Static, Public, HasDefaults)
-// Parameters:
-// unsigned char                  R                              (Parm)
-// unsigned char                  G                              (Parm)
-// unsigned char                  B                              (Parm)
-// unsigned char                  A                              (OptionalParm, Parm)
-// struct FColor                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FColor UObject::STATIC_MakeColor(unsigned char R, unsigned char G, unsigned char B, unsigned char A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MakeColor");
+	// Function Core.Object.MakeColor
+	// (Final, Defined, Static, Public, HasDefaults)
+	// Parameters:
+	// unsigned char                  R                              (Parm)
+	// unsigned char                  G                              (Parm)
+	// unsigned char                  B                              (Parm)
+	// unsigned char                  A                              (OptionalParm, Parm)
+	// struct FColor                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_MakeColor_Params params;
-	params.R = R;
-	params.G = G;
-	params.B = B;
-	params.A = A;
+	struct FColor UObject::STATIC_MakeColor(unsigned char R, unsigned char G, unsigned char B, unsigned char A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MakeColor");
 
-	auto flags = fn->FunctionFlags;
+		UObject_MakeColor_Params params;
+		params.R = R;
+		params.G = G;
+		params.B = B;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Add_ColorColor
-// (Final, Defined, Operator, Static, Public)
-// Parameters:
-// struct FColor                  A                              (Parm)
-// struct FColor                  B                              (Parm)
-// struct FColor                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FColor UObject::STATIC_Add_ColorColor(const struct FColor& A, const struct FColor& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Add_ColorColor");
+	// Function Core.Object.Add_ColorColor
+	// (Final, Defined, Operator, Static, Public)
+	// Parameters:
+	// struct FColor                  A                              (Parm)
+	// struct FColor                  B                              (Parm)
+	// struct FColor                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Add_ColorColor_Params params;
-	params.A = A;
-	params.B = B;
+	struct FColor UObject::STATIC_Add_ColorColor(const struct FColor& A, const struct FColor& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Add_ColorColor");
 
-	auto flags = fn->FunctionFlags;
+		UObject_Add_ColorColor_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Multiply_ColorFloat
-// (Final, Defined, Operator, Static, Public)
-// Parameters:
-// struct FColor                  A                              (Parm)
-// float                          B                              (Parm)
-// struct FColor                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FColor UObject::STATIC_Multiply_ColorFloat(const struct FColor& A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_ColorFloat");
+	// Function Core.Object.Multiply_ColorFloat
+	// (Final, Defined, Operator, Static, Public)
+	// Parameters:
+	// struct FColor                  A                              (Parm)
+	// float                          B                              (Parm)
+	// struct FColor                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Multiply_ColorFloat_Params params;
-	params.A = A;
-	params.B = B;
+	struct FColor UObject::STATIC_Multiply_ColorFloat(const struct FColor& A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_ColorFloat");
 
-	auto flags = fn->FunctionFlags;
+		UObject_Multiply_ColorFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Multiply_FloatColor
-// (Final, Defined, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// struct FColor                  B                              (Parm)
-// struct FColor                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FColor UObject::STATIC_Multiply_FloatColor(float A, const struct FColor& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_FloatColor");
+	// Function Core.Object.Multiply_FloatColor
+	// (Final, Defined, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// struct FColor                  B                              (Parm)
+	// struct FColor                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Multiply_FloatColor_Params params;
-	params.A = A;
-	params.B = B;
+	struct FColor UObject::STATIC_Multiply_FloatColor(float A, const struct FColor& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_FloatColor");
 
-	auto flags = fn->FunctionFlags;
+		UObject_Multiply_FloatColor_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Subtract_ColorColor
-// (Final, Defined, Operator, Static, Public)
-// Parameters:
-// struct FColor                  A                              (Parm)
-// struct FColor                  B                              (Parm)
-// struct FColor                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FColor UObject::STATIC_Subtract_ColorColor(const struct FColor& A, const struct FColor& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_ColorColor");
+	// Function Core.Object.Subtract_ColorColor
+	// (Final, Defined, Operator, Static, Public)
+	// Parameters:
+	// struct FColor                  A                              (Parm)
+	// struct FColor                  B                              (Parm)
+	// struct FColor                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Subtract_ColorColor_Params params;
-	params.A = A;
-	params.B = B;
+	struct FColor UObject::STATIC_Subtract_ColorColor(const struct FColor& A, const struct FColor& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_ColorColor");
 
-	auto flags = fn->FunctionFlags;
+		UObject_Subtract_ColorColor_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.vect2d
-// (Final, Defined, Static, Public, HasDefaults)
-// Parameters:
-// float                          InX                            (Parm)
-// float                          InY                            (Parm)
-// struct FVector2D               ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector2D UObject::STATIC_vect2d(float InX, float InY)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.vect2d");
+	// Function Core.Object.vect2d
+	// (Final, Defined, Static, Public, HasDefaults)
+	// Parameters:
+	// float                          InX                            (Parm)
+	// float                          InY                            (Parm)
+	// struct FVector2D               ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_vect2d_Params params;
-	params.InX = InX;
-	params.InY = InY;
+	struct FVector2D UObject::STATIC_vect2d(float InX, float InY)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.vect2d");
 
-	auto flags = fn->FunctionFlags;
+		UObject_vect2d_Params params;
+		params.InX = InX;
+		params.InY = InY;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetRangePctByValue
-// (Final, Defined, Simulated, Static, Public)
-// Parameters:
-// struct FVector2D               Range                          (Parm)
-// float                          Value                          (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_GetRangePctByValue(const struct FVector2D& Range, float Value)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetRangePctByValue");
+	// Function Core.Object.GetRangePctByValue
+	// (Final, Defined, Simulated, Static, Public)
+	// Parameters:
+	// struct FVector2D               Range                          (Parm)
+	// float                          Value                          (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetRangePctByValue_Params params;
-	params.Range = Range;
-	params.Value = Value;
+	float UObject::STATIC_GetRangePctByValue(const struct FVector2D& Range, float Value)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetRangePctByValue");
 
-	auto flags = fn->FunctionFlags;
+		UObject_GetRangePctByValue_Params params;
+		params.Range = Range;
+		params.Value = Value;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetRangeValueByPct
-// (Final, Defined, Simulated, Static, Public)
-// Parameters:
-// struct FVector2D               Range                          (Parm)
-// float                          Pct                            (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_GetRangeValueByPct(const struct FVector2D& Range, float Pct)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetRangeValueByPct");
+	// Function Core.Object.GetRangeValueByPct
+	// (Final, Defined, Simulated, Static, Public)
+	// Parameters:
+	// struct FVector2D               Range                          (Parm)
+	// float                          Pct                            (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetRangeValueByPct_Params params;
-	params.Range = Range;
-	params.Pct = Pct;
+	float UObject::STATIC_GetRangeValueByPct(const struct FVector2D& Range, float Pct)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetRangeValueByPct");
 
-	auto flags = fn->FunctionFlags;
+		UObject_GetRangeValueByPct_Params params;
+		params.Range = Range;
+		params.Pct = Pct;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetVectorAboveBelow
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 B                              (Parm)
-// struct FVector                 PlaneNormal                    (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_GetVectorAboveBelow(const struct FVector& A, const struct FVector& B, const struct FVector& PlaneNormal)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetVectorAboveBelow");
+	// Function Core.Object.GetVectorAboveBelow
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// struct FVector                 PlaneNormal                    (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetVectorAboveBelow_Params params;
-	params.A = A;
-	params.B = B;
-	params.PlaneNormal = PlaneNormal;
+	int UObject::STATIC_GetVectorAboveBelow(const struct FVector& A, const struct FVector& B, const struct FVector& PlaneNormal)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetVectorAboveBelow");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetVectorAboveBelow_Params params;
+		params.A = A;
+		params.B = B;
+		params.PlaneNormal = PlaneNormal;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetVectorSide
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_GetVectorSide(const struct FVector& A, const struct FVector& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetVectorSide");
+	// Function Core.Object.GetVectorSide
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetVectorSide_Params params;
-	params.A = A;
-	params.B = B;
+	int UObject::STATIC_GetVectorSide(const struct FVector& A, const struct FVector& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetVectorSide");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetVectorSide_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetAngleBetween
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_GetAngleBetween(const struct FVector& A, const struct FVector& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetAngleBetween");
+	// Function Core.Object.GetAngleBetween
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetAngleBetween_Params params;
-	params.A = A;
-	params.B = B;
+	float UObject::STATIC_GetAngleBetween(const struct FVector& A, const struct FVector& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetAngleBetween");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetAngleBetween_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.NotEqual_IntStringRef
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_NotEqual_IntStringRef(int A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_IntStringRef");
+	// Function Core.Object.NotEqual_IntStringRef
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_NotEqual_IntStringRef_Params params;
-	params.A = A;
+	bool UObject::STATIC_NotEqual_IntStringRef(int A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_IntStringRef");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_NotEqual_IntStringRef_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.NotEqual_StringRefInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_NotEqual_StringRefInt(int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_StringRefInt");
+	// Function Core.Object.NotEqual_StringRefInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_NotEqual_StringRefInt_Params params;
-	params.B = B;
+	bool UObject::STATIC_NotEqual_StringRefInt(int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_StringRefInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_NotEqual_StringRefInt_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.NotEqual_StringRefStringRef
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_NotEqual_StringRefStringRef()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_StringRefStringRef");
+	// Function Core.Object.NotEqual_StringRefStringRef
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_NotEqual_StringRefStringRef_Params params;
+	bool UObject::STATIC_NotEqual_StringRefStringRef()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_StringRefStringRef");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_NotEqual_StringRefStringRef_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.EqualEqual_IntStringRef
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_EqualEqual_IntStringRef(int A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_IntStringRef");
+	// Function Core.Object.EqualEqual_IntStringRef
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_EqualEqual_IntStringRef_Params params;
-	params.A = A;
+	bool UObject::STATIC_EqualEqual_IntStringRef(int A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_IntStringRef");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_EqualEqual_IntStringRef_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.EqualEqual_StringRefInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_EqualEqual_StringRefInt(int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_StringRefInt");
+	// Function Core.Object.EqualEqual_StringRefInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_EqualEqual_StringRefInt_Params params;
-	params.B = B;
+	bool UObject::STATIC_EqualEqual_StringRefInt(int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_StringRefInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_EqualEqual_StringRefInt_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.EqualEqual_StringRefStringRef
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_EqualEqual_StringRefStringRef()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_StringRefStringRef");
+	// Function Core.Object.EqualEqual_StringRefStringRef
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_EqualEqual_StringRefStringRef_Params params;
+	bool UObject::STATIC_EqualEqual_StringRefStringRef()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_StringRefStringRef");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_EqualEqual_StringRefStringRef_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Subtract_QuatQuat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FQuat                   A                              (Parm)
-// struct FQuat                   B                              (Parm)
-// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FQuat UObject::STATIC_Subtract_QuatQuat(const struct FQuat& A, const struct FQuat& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_QuatQuat");
+	// Function Core.Object.Subtract_QuatQuat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FQuat                   A                              (Parm)
+	// struct FQuat                   B                              (Parm)
+	// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Subtract_QuatQuat_Params params;
-	params.A = A;
-	params.B = B;
+	struct FQuat UObject::STATIC_Subtract_QuatQuat(const struct FQuat& A, const struct FQuat& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_QuatQuat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Subtract_QuatQuat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Add_QuatQuat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FQuat                   A                              (Parm)
-// struct FQuat                   B                              (Parm)
-// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FQuat UObject::STATIC_Add_QuatQuat(const struct FQuat& A, const struct FQuat& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Add_QuatQuat");
+	// Function Core.Object.Add_QuatQuat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FQuat                   A                              (Parm)
+	// struct FQuat                   B                              (Parm)
+	// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Add_QuatQuat_Params params;
-	params.A = A;
-	params.B = B;
+	struct FQuat UObject::STATIC_Add_QuatQuat(const struct FQuat& A, const struct FQuat& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Add_QuatQuat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Add_QuatQuat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.QuatSlerp
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FQuat                   A                              (Parm)
-// struct FQuat                   B                              (Parm)
-// float                          Alpha                          (Parm)
-// bool                           bShortestPath                  (OptionalParm, Parm)
-// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FQuat UObject::STATIC_QuatSlerp(const struct FQuat& A, const struct FQuat& B, float Alpha, bool bShortestPath)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatSlerp");
+	// Function Core.Object.QuatSlerp
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FQuat                   A                              (Parm)
+	// struct FQuat                   B                              (Parm)
+	// float                          Alpha                          (Parm)
+	// bool                           bShortestPath                  (OptionalParm, Parm)
+	// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_QuatSlerp_Params params;
-	params.A = A;
-	params.B = B;
-	params.Alpha = Alpha;
-	params.bShortestPath = bShortestPath;
+	struct FQuat UObject::STATIC_QuatSlerp(const struct FQuat& A, const struct FQuat& B, float Alpha, bool bShortestPath)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatSlerp");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_QuatSlerp_Params params;
+		params.A = A;
+		params.B = B;
+		params.Alpha = Alpha;
+		params.bShortestPath = bShortestPath;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.QuatToRotator
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FQuat                   A                              (Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_QuatToRotator(const struct FQuat& A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatToRotator");
+	// Function Core.Object.QuatToRotator
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FQuat                   A                              (Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_QuatToRotator_Params params;
-	params.A = A;
+	struct FRotator UObject::STATIC_QuatToRotator(const struct FQuat& A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatToRotator");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_QuatToRotator_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.QuatFromRotator
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FRotator                A                              (Parm)
-// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FQuat UObject::STATIC_QuatFromRotator(const struct FRotator& A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatFromRotator");
+	// Function Core.Object.QuatFromRotator
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FRotator                A                              (Parm)
+	// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_QuatFromRotator_Params params;
-	params.A = A;
+	struct FQuat UObject::STATIC_QuatFromRotator(const struct FRotator& A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatFromRotator");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_QuatFromRotator_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.QuatFromAxisAndAngle
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 Axis                           (Parm)
-// float                          Angle                          (Parm)
-// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FQuat UObject::STATIC_QuatFromAxisAndAngle(const struct FVector& Axis, float Angle)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatFromAxisAndAngle");
+	// Function Core.Object.QuatFromAxisAndAngle
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 Axis                           (Parm)
+	// float                          Angle                          (Parm)
+	// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_QuatFromAxisAndAngle_Params params;
-	params.Axis = Axis;
-	params.Angle = Angle;
+	struct FQuat UObject::STATIC_QuatFromAxisAndAngle(const struct FVector& Axis, float Angle)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatFromAxisAndAngle");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_QuatFromAxisAndAngle_Params params;
+		params.Axis = Axis;
+		params.Angle = Angle;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.QuatFindBetween
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 B                              (Parm)
-// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FQuat UObject::STATIC_QuatFindBetween(const struct FVector& A, const struct FVector& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatFindBetween");
+	// Function Core.Object.QuatFindBetween
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_QuatFindBetween_Params params;
-	params.A = A;
-	params.B = B;
+	struct FQuat UObject::STATIC_QuatFindBetween(const struct FVector& A, const struct FVector& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatFindBetween");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_QuatFindBetween_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.QuatRotateVector
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FQuat                   A                              (Parm)
-// struct FVector                 B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_QuatRotateVector(const struct FQuat& A, const struct FVector& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatRotateVector");
+	// Function Core.Object.QuatRotateVector
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FQuat                   A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_QuatRotateVector_Params params;
-	params.A = A;
-	params.B = B;
+	struct FVector UObject::STATIC_QuatRotateVector(const struct FQuat& A, const struct FVector& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatRotateVector");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_QuatRotateVector_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.QuatInvert
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FQuat                   A                              (Parm)
-// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FQuat UObject::STATIC_QuatInvert(const struct FQuat& A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatInvert");
+	// Function Core.Object.QuatInvert
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FQuat                   A                              (Parm)
+	// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_QuatInvert_Params params;
-	params.A = A;
+	struct FQuat UObject::STATIC_QuatInvert(const struct FQuat& A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatInvert");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_QuatInvert_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.QuatDot
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FQuat                   A                              (Parm)
-// struct FQuat                   B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_QuatDot(const struct FQuat& A, const struct FQuat& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatDot");
+	// Function Core.Object.QuatDot
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FQuat                   A                              (Parm)
+	// struct FQuat                   B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_QuatDot_Params params;
-	params.A = A;
-	params.B = B;
+	float UObject::STATIC_QuatDot(const struct FQuat& A, const struct FQuat& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatDot");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_QuatDot_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.QuatProduct
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FQuat                   A                              (Parm)
-// struct FQuat                   B                              (Parm)
-// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FQuat UObject::STATIC_QuatProduct(const struct FQuat& A, const struct FQuat& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatProduct");
+	// Function Core.Object.QuatProduct
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FQuat                   A                              (Parm)
+	// struct FQuat                   B                              (Parm)
+	// struct FQuat                   ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_QuatProduct_Params params;
-	params.A = A;
-	params.B = B;
+	struct FQuat UObject::STATIC_QuatProduct(const struct FQuat& A, const struct FQuat& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.QuatProduct");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_QuatProduct_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.NotEqual_NameName
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FName                   A                              (Parm)
-// struct FName                   B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_NotEqual_NameName(const struct FName& A, const struct FName& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_NameName");
+	// Function Core.Object.NotEqual_NameName
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FName                   A                              (Parm)
+	// struct FName                   B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_NotEqual_NameName_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_NotEqual_NameName(const struct FName& A, const struct FName& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_NameName");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_NotEqual_NameName_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.EqualEqual_NameName
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FName                   A                              (Parm)
-// struct FName                   B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_EqualEqual_NameName(const struct FName& A, const struct FName& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_NameName");
+	// Function Core.Object.EqualEqual_NameName
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FName                   A                              (Parm)
+	// struct FName                   B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_EqualEqual_NameName_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_EqualEqual_NameName(const struct FName& A, const struct FName& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_NameName");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_EqualEqual_NameName_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.IsA
-// (Final, Native, Public)
-// Parameters:
-// struct FName                   ClassName                      (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::IsA(const struct FName& ClassName)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.IsA");
+	// Function Core.Object.IsA
+	// (Final, Native, Public)
+	// Parameters:
+	// struct FName                   ClassName                      (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_IsA_Params params;
-	params.ClassName = ClassName;
+	bool UObject::IsA(const struct FName& ClassName)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.IsA");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_IsA_Params params;
+		params.ClassName = ClassName;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.ClassIsChildOf
-// (Final, Native, Static, Public)
-// Parameters:
-// class UClass*                  TestClass                      (Parm)
-// class UClass*                  ParentClass                    (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_ClassIsChildOf(class UClass* TestClass, class UClass* ParentClass)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ClassIsChildOf");
+	// Function Core.Object.ClassIsChildOf
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// class UClass*                  TestClass                      (Parm)
+	// class UClass*                  ParentClass                    (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_ClassIsChildOf_Params params;
-	params.TestClass = TestClass;
-	params.ParentClass = ParentClass;
+	bool UObject::STATIC_ClassIsChildOf(class UClass* TestClass, class UClass* ParentClass)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ClassIsChildOf");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_ClassIsChildOf_Params params;
+		params.TestClass = TestClass;
+		params.ParentClass = ParentClass;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.NotEqual_InterfaceInterface
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// TScriptInterface<class UInterface> A                              (Parm)
-// TScriptInterface<class UInterface> B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_NotEqual_InterfaceInterface(const TScriptInterface<class UInterface>& A, const TScriptInterface<class UInterface>& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_InterfaceInterface");
+	// Function Core.Object.NotEqual_InterfaceInterface
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// TScriptInterface<class UInterface> A                              (Parm)
+	// TScriptInterface<class UInterface> B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_NotEqual_InterfaceInterface_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_NotEqual_InterfaceInterface(const TScriptInterface<class UInterface>& A, const TScriptInterface<class UInterface>& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_InterfaceInterface");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_NotEqual_InterfaceInterface_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.EqualEqual_InterfaceInterface
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// TScriptInterface<class UInterface> A                              (Parm)
-// TScriptInterface<class UInterface> B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_EqualEqual_InterfaceInterface(const TScriptInterface<class UInterface>& A, const TScriptInterface<class UInterface>& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_InterfaceInterface");
+	// Function Core.Object.EqualEqual_InterfaceInterface
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// TScriptInterface<class UInterface> A                              (Parm)
+	// TScriptInterface<class UInterface> B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_EqualEqual_InterfaceInterface_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_EqualEqual_InterfaceInterface(const TScriptInterface<class UInterface>& A, const TScriptInterface<class UInterface>& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_InterfaceInterface");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_EqualEqual_InterfaceInterface_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.NotEqual_ObjectObject
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// class UObject*                 A                              (Parm)
-// class UObject*                 B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_NotEqual_ObjectObject(class UObject* A, class UObject* B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_ObjectObject");
+	// Function Core.Object.NotEqual_ObjectObject
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// class UObject*                 A                              (Parm)
+	// class UObject*                 B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_NotEqual_ObjectObject_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_NotEqual_ObjectObject(class UObject* A, class UObject* B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_ObjectObject");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_NotEqual_ObjectObject_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.EqualEqual_ObjectObject
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// class UObject*                 A                              (Parm)
-// class UObject*                 B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_EqualEqual_ObjectObject(class UObject* A, class UObject* B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_ObjectObject");
+	// Function Core.Object.EqualEqual_ObjectObject
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// class UObject*                 A                              (Parm)
+	// class UObject*                 B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_EqualEqual_ObjectObject_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_EqualEqual_ObjectObject(class UObject* A, class UObject* B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_ObjectObject");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_EqualEqual_ObjectObject_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.PathName
-// (Final, Native, Static, Public)
-// Parameters:
-// class UObject*                 CheckObject                    (Parm)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_PathName(class UObject* CheckObject)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PathName");
+	// Function Core.Object.PathName
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// class UObject*                 CheckObject                    (Parm)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_PathName_Params params;
-	params.CheckObject = CheckObject;
+	struct FString UObject::STATIC_PathName(class UObject* CheckObject)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.PathName");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_PathName_Params params;
+		params.CheckObject = CheckObject;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.ParseStringIntoArray
-// (Final, Native, Static, Public, HasOutParms)
-// Parameters:
-// struct FString                 BaseString                     (Parm, NeedCtorLink)
-// TArray<struct FString>         Pieces                         (Parm, OutParm, NeedCtorLink)
-// struct FString                 delim                          (Parm, NeedCtorLink)
-// bool                           bCullEmpty                     (Parm)
 
-void UObject::STATIC_ParseStringIntoArray(const struct FString& BaseString, const struct FString& delim, bool bCullEmpty, TArray<struct FString>* Pieces)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ParseStringIntoArray");
+	// Function Core.Object.ParseStringIntoArray
+	// (Final, Native, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FString                 BaseString                     (Parm, NeedCtorLink)
+	// TArray<struct FString>         Pieces                         (Parm, OutParm, NeedCtorLink)
+	// struct FString                 delim                          (Parm, NeedCtorLink)
+	// bool                           bCullEmpty                     (Parm)
 
-	UObject_ParseStringIntoArray_Params params;
-	params.BaseString = BaseString;
-	params.delim = delim;
-	params.bCullEmpty = bCullEmpty;
+	void UObject::STATIC_ParseStringIntoArray(const struct FString& BaseString, const struct FString& delim, bool bCullEmpty, TArray<struct FString>* Pieces)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ParseStringIntoArray");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_ParseStringIntoArray_Params params;
+		params.BaseString = BaseString;
+		params.delim = delim;
+		params.bCullEmpty = bCullEmpty;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (Pieces != nullptr)
-		*Pieces = params.Pieces;
-}
+		fn->FunctionFlags = flags;
 
+		if (Pieces != nullptr)
+			*Pieces = params.Pieces;
+	}
 
-// Function Core.Object.JoinArray
-// (Final, Defined, Static, Public, HasOutParms)
-// Parameters:
-// TArray<struct FString>         StringArray                    (Parm, NeedCtorLink)
-// struct FString                 out_Result                     (Parm, OutParm, NeedCtorLink)
-// struct FString                 delim                          (OptionalParm, Parm, NeedCtorLink)
-// bool                           bIgnoreBlanks                  (OptionalParm, Parm)
 
-void UObject::STATIC_JoinArray(TArray<struct FString> StringArray, const struct FString& delim, bool bIgnoreBlanks, struct FString* out_Result)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.JoinArray");
+	// Function Core.Object.JoinArray
+	// (Final, Defined, Static, Public, HasOutParms)
+	// Parameters:
+	// TArray<struct FString>         StringArray                    (Parm, NeedCtorLink)
+	// struct FString                 out_Result                     (Parm, OutParm, NeedCtorLink)
+	// struct FString                 delim                          (OptionalParm, Parm, NeedCtorLink)
+	// bool                           bIgnoreBlanks                  (OptionalParm, Parm)
 
-	UObject_JoinArray_Params params;
-	params.StringArray = StringArray;
-	params.delim = delim;
-	params.bIgnoreBlanks = bIgnoreBlanks;
+	void UObject::STATIC_JoinArray(TArray<struct FString> StringArray, const struct FString& delim, bool bIgnoreBlanks, struct FString* out_Result)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.JoinArray");
 
-	auto flags = fn->FunctionFlags;
+		UObject_JoinArray_Params params;
+		params.StringArray = StringArray;
+		params.delim = delim;
+		params.bIgnoreBlanks = bIgnoreBlanks;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (out_Result != nullptr)
-		*out_Result = params.out_Result;
-}
+		fn->FunctionFlags = flags;
 
+		if (out_Result != nullptr)
+			*out_Result = params.out_Result;
+	}
 
-// Function Core.Object.Split
-// (Final, Defined, Static, Public)
-// Parameters:
-// struct FString                 Text                           (Parm, CoerceParm, NeedCtorLink)
-// struct FString                 SplitStr                       (Parm, CoerceParm, NeedCtorLink)
-// bool                           bOmitSplitStr                  (OptionalParm, Parm)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_Split(const struct FString& Text, const struct FString& SplitStr, bool bOmitSplitStr)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Split");
+	// Function Core.Object.Split
+	// (Final, Defined, Static, Public)
+	// Parameters:
+	// struct FString                 Text                           (Parm, CoerceParm, NeedCtorLink)
+	// struct FString                 SplitStr                       (Parm, CoerceParm, NeedCtorLink)
+	// bool                           bOmitSplitStr                  (OptionalParm, Parm)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_Split_Params params;
-	params.Text = Text;
-	params.SplitStr = SplitStr;
-	params.bOmitSplitStr = bOmitSplitStr;
+	struct FString UObject::STATIC_Split(const struct FString& Text, const struct FString& SplitStr, bool bOmitSplitStr)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Split");
 
-	auto flags = fn->FunctionFlags;
+		UObject_Split_Params params;
+		params.Text = Text;
+		params.SplitStr = SplitStr;
+		params.bOmitSplitStr = bOmitSplitStr;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Repl
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FString                 Src                            (Parm, CoerceParm, NeedCtorLink)
-// struct FString                 Match                          (Parm, CoerceParm, NeedCtorLink)
-// struct FString                 With                           (Parm, CoerceParm, NeedCtorLink)
-// bool                           bCaseSensitive                 (OptionalParm, Parm)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_Repl(const struct FString& Src, const struct FString& Match, const struct FString& With, bool bCaseSensitive)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Repl");
+	// Function Core.Object.Repl
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FString                 Src                            (Parm, CoerceParm, NeedCtorLink)
+	// struct FString                 Match                          (Parm, CoerceParm, NeedCtorLink)
+	// struct FString                 With                           (Parm, CoerceParm, NeedCtorLink)
+	// bool                           bCaseSensitive                 (OptionalParm, Parm)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_Repl_Params params;
-	params.Src = Src;
-	params.Match = Match;
-	params.With = With;
-	params.bCaseSensitive = bCaseSensitive;
+	struct FString UObject::STATIC_Repl(const struct FString& Src, const struct FString& Match, const struct FString& With, bool bCaseSensitive)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Repl");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Repl_Params params;
+		params.Src = Src;
+		params.Match = Match;
+		params.With = With;
+		params.bCaseSensitive = bCaseSensitive;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Asc
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FString                 S                              (Parm, NeedCtorLink)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_Asc(const struct FString& S)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Asc");
+	// Function Core.Object.Asc
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FString                 S                              (Parm, NeedCtorLink)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Asc_Params params;
-	params.S = S;
+	int UObject::STATIC_Asc(const struct FString& S)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Asc");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Asc_Params params;
+		params.S = S;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Chr
-// (Final, Native, Static, Public)
-// Parameters:
-// int                            I                              (Parm)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_Chr(int I)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Chr");
+	// Function Core.Object.Chr
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// int                            I                              (Parm)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_Chr_Params params;
-	params.I = I;
+	struct FString UObject::STATIC_Chr(int I)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Chr");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Chr_Params params;
+		params.I = I;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Locs
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_Locs(const struct FString& S)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Locs");
+	// Function Core.Object.Locs
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_Locs_Params params;
-	params.S = S;
+	struct FString UObject::STATIC_Locs(const struct FString& S)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Locs");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Locs_Params params;
+		params.S = S;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Caps
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_Caps(const struct FString& S)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Caps");
+	// Function Core.Object.Caps
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_Caps_Params params;
-	params.S = S;
+	struct FString UObject::STATIC_Caps(const struct FString& S)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Caps");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Caps_Params params;
+		params.S = S;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Right
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
-// int                            I                              (Parm)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_Right(const struct FString& S, int I)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Right");
+	// Function Core.Object.Right
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
+	// int                            I                              (Parm)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_Right_Params params;
-	params.S = S;
-	params.I = I;
+	struct FString UObject::STATIC_Right(const struct FString& S, int I)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Right");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Right_Params params;
+		params.S = S;
+		params.I = I;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Left
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
-// int                            I                              (Parm)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_Left(const struct FString& S, int I)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Left");
+	// Function Core.Object.Left
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
+	// int                            I                              (Parm)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_Left_Params params;
-	params.S = S;
-	params.I = I;
+	struct FString UObject::STATIC_Left(const struct FString& S, int I)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Left");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Left_Params params;
+		params.S = S;
+		params.I = I;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Mid
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
-// int                            I                              (Parm)
-// int                            J                              (OptionalParm, Parm)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_Mid(const struct FString& S, int I, int J)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Mid");
+	// Function Core.Object.Mid
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
+	// int                            I                              (Parm)
+	// int                            J                              (OptionalParm, Parm)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_Mid_Params params;
-	params.S = S;
-	params.I = I;
-	params.J = J;
+	struct FString UObject::STATIC_Mid(const struct FString& S, int I, int J)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Mid");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Mid_Params params;
+		params.S = S;
+		params.I = I;
+		params.J = J;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.InStr
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
-// struct FString                 T                              (Parm, CoerceParm, NeedCtorLink)
-// bool                           bSearchFromRight               (OptionalParm, Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_InStr(const struct FString& S, const struct FString& T, bool bSearchFromRight)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.InStr");
+	// Function Core.Object.InStr
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
+	// struct FString                 T                              (Parm, CoerceParm, NeedCtorLink)
+	// bool                           bSearchFromRight               (OptionalParm, Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_InStr_Params params;
-	params.S = S;
-	params.T = T;
-	params.bSearchFromRight = bSearchFromRight;
+	int UObject::STATIC_InStr(const struct FString& S, const struct FString& T, bool bSearchFromRight)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.InStr");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_InStr_Params params;
+		params.S = S;
+		params.T = T;
+		params.bSearchFromRight = bSearchFromRight;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Len
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_Len(const struct FString& S)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Len");
+	// Function Core.Object.Len
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FString                 S                              (Parm, CoerceParm, NeedCtorLink)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Len_Params params;
-	params.S = S;
+	int UObject::STATIC_Len(const struct FString& S)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Len");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Len_Params params;
+		params.S = S;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.SubtractEqual_StrStr
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// struct FString                 A                              (Parm, OutParm, NeedCtorLink)
-// struct FString                 B                              (Parm, CoerceParm, NeedCtorLink)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_SubtractEqual_StrStr(const struct FString& B, struct FString* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractEqual_StrStr");
+	// Function Core.Object.SubtractEqual_StrStr
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FString                 A                              (Parm, OutParm, NeedCtorLink)
+	// struct FString                 B                              (Parm, CoerceParm, NeedCtorLink)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_SubtractEqual_StrStr_Params params;
-	params.B = B;
+	struct FString UObject::STATIC_SubtractEqual_StrStr(const struct FString& B, struct FString* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractEqual_StrStr");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_SubtractEqual_StrStr_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.AtEqual_StrStr
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// struct FString                 A                              (Parm, OutParm, NeedCtorLink)
-// struct FString                 B                              (Parm, CoerceParm, NeedCtorLink)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_AtEqual_StrStr(const struct FString& B, struct FString* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AtEqual_StrStr");
+	// Function Core.Object.AtEqual_StrStr
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FString                 A                              (Parm, OutParm, NeedCtorLink)
+	// struct FString                 B                              (Parm, CoerceParm, NeedCtorLink)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_AtEqual_StrStr_Params params;
-	params.B = B;
+	struct FString UObject::STATIC_AtEqual_StrStr(const struct FString& B, struct FString* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AtEqual_StrStr");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_AtEqual_StrStr_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.ConcatEqual_StrStr
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// struct FString                 A                              (Parm, OutParm, NeedCtorLink)
-// struct FString                 B                              (Parm, CoerceParm, NeedCtorLink)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_ConcatEqual_StrStr(const struct FString& B, struct FString* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ConcatEqual_StrStr");
+	// Function Core.Object.ConcatEqual_StrStr
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FString                 A                              (Parm, OutParm, NeedCtorLink)
+	// struct FString                 B                              (Parm, CoerceParm, NeedCtorLink)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_ConcatEqual_StrStr_Params params;
-	params.B = B;
+	struct FString UObject::STATIC_ConcatEqual_StrStr(const struct FString& B, struct FString* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ConcatEqual_StrStr");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_ConcatEqual_StrStr_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.ComplementEqual_StrStr
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FString                 A                              (Parm, NeedCtorLink)
-// struct FString                 B                              (Parm, NeedCtorLink)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_ComplementEqual_StrStr(const struct FString& A, const struct FString& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ComplementEqual_StrStr");
+	// Function Core.Object.ComplementEqual_StrStr
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FString                 A                              (Parm, NeedCtorLink)
+	// struct FString                 B                              (Parm, NeedCtorLink)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_ComplementEqual_StrStr_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_ComplementEqual_StrStr(const struct FString& A, const struct FString& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ComplementEqual_StrStr");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_ComplementEqual_StrStr_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.NotEqual_StrStr
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FString                 A                              (Parm, NeedCtorLink)
-// struct FString                 B                              (Parm, NeedCtorLink)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_NotEqual_StrStr(const struct FString& A, const struct FString& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_StrStr");
+	// Function Core.Object.NotEqual_StrStr
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FString                 A                              (Parm, NeedCtorLink)
+	// struct FString                 B                              (Parm, NeedCtorLink)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_NotEqual_StrStr_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_NotEqual_StrStr(const struct FString& A, const struct FString& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_StrStr");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_NotEqual_StrStr_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.EqualEqual_StrStr
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FString                 A                              (Parm, NeedCtorLink)
-// struct FString                 B                              (Parm, NeedCtorLink)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_EqualEqual_StrStr(const struct FString& A, const struct FString& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_StrStr");
+	// Function Core.Object.EqualEqual_StrStr
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FString                 A                              (Parm, NeedCtorLink)
+	// struct FString                 B                              (Parm, NeedCtorLink)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_EqualEqual_StrStr_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_EqualEqual_StrStr(const struct FString& A, const struct FString& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_StrStr");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_EqualEqual_StrStr_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GreaterEqual_StrStr
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FString                 A                              (Parm, NeedCtorLink)
-// struct FString                 B                              (Parm, NeedCtorLink)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_GreaterEqual_StrStr(const struct FString& A, const struct FString& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GreaterEqual_StrStr");
+	// Function Core.Object.GreaterEqual_StrStr
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FString                 A                              (Parm, NeedCtorLink)
+	// struct FString                 B                              (Parm, NeedCtorLink)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GreaterEqual_StrStr_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_GreaterEqual_StrStr(const struct FString& A, const struct FString& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GreaterEqual_StrStr");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GreaterEqual_StrStr_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.LessEqual_StrStr
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FString                 A                              (Parm, NeedCtorLink)
-// struct FString                 B                              (Parm, NeedCtorLink)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_LessEqual_StrStr(const struct FString& A, const struct FString& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.LessEqual_StrStr");
+	// Function Core.Object.LessEqual_StrStr
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FString                 A                              (Parm, NeedCtorLink)
+	// struct FString                 B                              (Parm, NeedCtorLink)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_LessEqual_StrStr_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_LessEqual_StrStr(const struct FString& A, const struct FString& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.LessEqual_StrStr");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_LessEqual_StrStr_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Greater_StrStr
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FString                 A                              (Parm, NeedCtorLink)
-// struct FString                 B                              (Parm, NeedCtorLink)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_Greater_StrStr(const struct FString& A, const struct FString& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Greater_StrStr");
+	// Function Core.Object.Greater_StrStr
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FString                 A                              (Parm, NeedCtorLink)
+	// struct FString                 B                              (Parm, NeedCtorLink)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Greater_StrStr_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_Greater_StrStr(const struct FString& A, const struct FString& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Greater_StrStr");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Greater_StrStr_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Less_StrStr
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FString                 A                              (Parm, NeedCtorLink)
-// struct FString                 B                              (Parm, NeedCtorLink)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_Less_StrStr(const struct FString& A, const struct FString& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Less_StrStr");
+	// Function Core.Object.Less_StrStr
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FString                 A                              (Parm, NeedCtorLink)
+	// struct FString                 B                              (Parm, NeedCtorLink)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Less_StrStr_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_Less_StrStr(const struct FString& A, const struct FString& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Less_StrStr");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Less_StrStr_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.At_StrStr
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FString                 A                              (Parm, CoerceParm, NeedCtorLink)
-// struct FString                 B                              (Parm, CoerceParm, NeedCtorLink)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_At_StrStr(const struct FString& A, const struct FString& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.At_StrStr");
+	// Function Core.Object.At_StrStr
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FString                 A                              (Parm, CoerceParm, NeedCtorLink)
+	// struct FString                 B                              (Parm, CoerceParm, NeedCtorLink)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_At_StrStr_Params params;
-	params.A = A;
-	params.B = B;
+	struct FString UObject::STATIC_At_StrStr(const struct FString& A, const struct FString& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.At_StrStr");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_At_StrStr_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Concat_StrStr
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FString                 A                              (Parm, CoerceParm, NeedCtorLink)
-// struct FString                 B                              (Parm, CoerceParm, NeedCtorLink)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_Concat_StrStr(const struct FString& A, const struct FString& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Concat_StrStr");
+	// Function Core.Object.Concat_StrStr
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FString                 A                              (Parm, CoerceParm, NeedCtorLink)
+	// struct FString                 B                              (Parm, CoerceParm, NeedCtorLink)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_Concat_StrStr_Params params;
-	params.A = A;
-	params.B = B;
+	struct FString UObject::STATIC_Concat_StrStr(const struct FString& A, const struct FString& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Concat_StrStr");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Concat_StrStr_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.SClampRotAxis
-// (Final, Defined, Simulated, Static, Public, HasOutParms)
-// Parameters:
-// float                          DeltaTime                      (Parm)
-// int                            ViewAxis                       (Parm)
-// int                            out_DeltaViewAxis              (Parm, OutParm)
-// int                            MaxLimit                       (Parm)
-// int                            MinLimit                       (Parm)
-// float                          InterpolationSpeed             (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_SClampRotAxis(float DeltaTime, int ViewAxis, int MaxLimit, int MinLimit, float InterpolationSpeed, int* out_DeltaViewAxis)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SClampRotAxis");
+	// Function Core.Object.SClampRotAxis
+	// (Final, Defined, Simulated, Static, Public, HasOutParms)
+	// Parameters:
+	// float                          DeltaTime                      (Parm)
+	// int                            ViewAxis                       (Parm)
+	// int                            out_DeltaViewAxis              (Parm, OutParm)
+	// int                            MaxLimit                       (Parm)
+	// int                            MinLimit                       (Parm)
+	// float                          InterpolationSpeed             (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_SClampRotAxis_Params params;
-	params.DeltaTime = DeltaTime;
-	params.ViewAxis = ViewAxis;
-	params.MaxLimit = MaxLimit;
-	params.MinLimit = MinLimit;
-	params.InterpolationSpeed = InterpolationSpeed;
+	bool UObject::STATIC_SClampRotAxis(float DeltaTime, int ViewAxis, int MaxLimit, int MinLimit, float InterpolationSpeed, int* out_DeltaViewAxis)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SClampRotAxis");
 
-	auto flags = fn->FunctionFlags;
+		UObject_SClampRotAxis_Params params;
+		params.DeltaTime = DeltaTime;
+		params.ViewAxis = ViewAxis;
+		params.MaxLimit = MaxLimit;
+		params.MinLimit = MinLimit;
+		params.InterpolationSpeed = InterpolationSpeed;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (out_DeltaViewAxis != nullptr)
-		*out_DeltaViewAxis = params.out_DeltaViewAxis;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (out_DeltaViewAxis != nullptr)
+			*out_DeltaViewAxis = params.out_DeltaViewAxis;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.ClampRotAxis
-// (Final, Defined, Simulated, Static, Public, HasOutParms)
-// Parameters:
-// int                            ViewAxis                       (Parm)
-// int                            out_DeltaViewAxis              (Parm, OutParm)
-// int                            MaxLimit                       (Parm)
-// int                            MinLimit                       (Parm)
 
-void UObject::STATIC_ClampRotAxis(int ViewAxis, int MaxLimit, int MinLimit, int* out_DeltaViewAxis)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ClampRotAxis");
+	// Function Core.Object.ClampRotAxis
+	// (Final, Defined, Simulated, Static, Public, HasOutParms)
+	// Parameters:
+	// int                            ViewAxis                       (Parm)
+	// int                            out_DeltaViewAxis              (Parm, OutParm)
+	// int                            MaxLimit                       (Parm)
+	// int                            MinLimit                       (Parm)
 
-	UObject_ClampRotAxis_Params params;
-	params.ViewAxis = ViewAxis;
-	params.MaxLimit = MaxLimit;
-	params.MinLimit = MinLimit;
+	void UObject::STATIC_ClampRotAxis(int ViewAxis, int MaxLimit, int MinLimit, int* out_DeltaViewAxis)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ClampRotAxis");
 
-	auto flags = fn->FunctionFlags;
+		UObject_ClampRotAxis_Params params;
+		params.ViewAxis = ViewAxis;
+		params.MaxLimit = MaxLimit;
+		params.MinLimit = MinLimit;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (out_DeltaViewAxis != nullptr)
-		*out_DeltaViewAxis = params.out_DeltaViewAxis;
-}
+		fn->FunctionFlags = flags;
 
+		if (out_DeltaViewAxis != nullptr)
+			*out_DeltaViewAxis = params.out_DeltaViewAxis;
+	}
 
-// Function Core.Object.RSize
-// (Final, Defined, Static, Public)
-// Parameters:
-// struct FRotator                R                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_RSize(const struct FRotator& R)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RSize");
+	// Function Core.Object.RSize
+	// (Final, Defined, Static, Public)
+	// Parameters:
+	// struct FRotator                R                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_RSize_Params params;
-	params.R = R;
+	float UObject::STATIC_RSize(const struct FRotator& R)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RSize");
 
-	auto flags = fn->FunctionFlags;
+		UObject_RSize_Params params;
+		params.R = R;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.RDiff
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FRotator                A                              (Parm)
-// struct FRotator                B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_RDiff(const struct FRotator& A, const struct FRotator& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RDiff");
+	// Function Core.Object.RDiff
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FRotator                A                              (Parm)
+	// struct FRotator                B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_RDiff_Params params;
-	params.A = A;
-	params.B = B;
+	float UObject::STATIC_RDiff(const struct FRotator& A, const struct FRotator& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RDiff");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_RDiff_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.NormalizeRotAxis
-// (Final, Native, Static, Public)
-// Parameters:
-// int                            Angle                          (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_NormalizeRotAxis(int Angle)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NormalizeRotAxis");
+	// Function Core.Object.NormalizeRotAxis
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// int                            Angle                          (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_NormalizeRotAxis_Params params;
-	params.Angle = Angle;
+	int UObject::STATIC_NormalizeRotAxis(int Angle)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NormalizeRotAxis");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_NormalizeRotAxis_Params params;
+		params.Angle = Angle;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.RInterpTo
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FRotator                Current                        (Parm)
-// struct FRotator                Target                         (Parm)
-// float                          DeltaTime                      (Parm)
-// float                          InterpSpeed                    (Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_RInterpTo(const struct FRotator& Current, const struct FRotator& Target, float DeltaTime, float InterpSpeed)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RInterpTo");
+	// Function Core.Object.RInterpTo
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FRotator                Current                        (Parm)
+	// struct FRotator                Target                         (Parm)
+	// float                          DeltaTime                      (Parm)
+	// float                          InterpSpeed                    (Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_RInterpTo_Params params;
-	params.Current = Current;
-	params.Target = Target;
-	params.DeltaTime = DeltaTime;
-	params.InterpSpeed = InterpSpeed;
+	struct FRotator UObject::STATIC_RInterpTo(const struct FRotator& Current, const struct FRotator& Target, float DeltaTime, float InterpSpeed)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RInterpTo");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_RInterpTo_Params params;
+		params.Current = Current;
+		params.Target = Target;
+		params.DeltaTime = DeltaTime;
+		params.InterpSpeed = InterpSpeed;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.RSmerp
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FRotator                A                              (Parm)
-// struct FRotator                B                              (Parm)
-// float                          Alpha                          (Parm)
-// bool                           bShortestPath                  (OptionalParm, Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_RSmerp(const struct FRotator& A, const struct FRotator& B, float Alpha, bool bShortestPath)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RSmerp");
+	// Function Core.Object.RSmerp
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FRotator                A                              (Parm)
+	// struct FRotator                B                              (Parm)
+	// float                          Alpha                          (Parm)
+	// bool                           bShortestPath                  (OptionalParm, Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_RSmerp_Params params;
-	params.A = A;
-	params.B = B;
-	params.Alpha = Alpha;
-	params.bShortestPath = bShortestPath;
+	struct FRotator UObject::STATIC_RSmerp(const struct FRotator& A, const struct FRotator& B, float Alpha, bool bShortestPath)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RSmerp");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_RSmerp_Params params;
+		params.A = A;
+		params.B = B;
+		params.Alpha = Alpha;
+		params.bShortestPath = bShortestPath;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.RLerp
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FRotator                A                              (Parm)
-// struct FRotator                B                              (Parm)
-// float                          Alpha                          (Parm)
-// bool                           bShortestPath                  (OptionalParm, Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_RLerp(const struct FRotator& A, const struct FRotator& B, float Alpha, bool bShortestPath)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RLerp");
+	// Function Core.Object.RLerp
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FRotator                A                              (Parm)
+	// struct FRotator                B                              (Parm)
+	// float                          Alpha                          (Parm)
+	// bool                           bShortestPath                  (OptionalParm, Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_RLerp_Params params;
-	params.A = A;
-	params.B = B;
-	params.Alpha = Alpha;
-	params.bShortestPath = bShortestPath;
+	struct FRotator UObject::STATIC_RLerp(const struct FRotator& A, const struct FRotator& B, float Alpha, bool bShortestPath)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RLerp");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_RLerp_Params params;
+		params.A = A;
+		params.B = B;
+		params.Alpha = Alpha;
+		params.bShortestPath = bShortestPath;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Normalize
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FRotator                Rot                            (Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_Normalize(const struct FRotator& Rot)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Normalize");
+	// Function Core.Object.Normalize
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FRotator                Rot                            (Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Normalize_Params params;
-	params.Rot = Rot;
+	struct FRotator UObject::STATIC_Normalize(const struct FRotator& Rot)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Normalize");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Normalize_Params params;
+		params.Rot = Rot;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.OrthoRotation
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 X                              (Parm)
-// struct FVector                 Y                              (Parm)
-// struct FVector                 Z                              (Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_OrthoRotation(const struct FVector& X, const struct FVector& Y, const struct FVector& Z)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.OrthoRotation");
+	// Function Core.Object.OrthoRotation
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 X                              (Parm)
+	// struct FVector                 Y                              (Parm)
+	// struct FVector                 Z                              (Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_OrthoRotation_Params params;
-	params.X = X;
-	params.Y = Y;
-	params.Z = Z;
+	struct FRotator UObject::STATIC_OrthoRotation(const struct FVector& X, const struct FVector& Y, const struct FVector& Z)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.OrthoRotation");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_OrthoRotation_Params params;
+		params.X = X;
+		params.Y = Y;
+		params.Z = Z;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.RotRand
-// (Final, Native, Static, Public)
-// Parameters:
-// bool                           bRoll                          (OptionalParm, Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_RotRand(bool bRoll)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RotRand");
+	// Function Core.Object.RotRand
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// bool                           bRoll                          (OptionalParm, Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_RotRand_Params params;
-	params.bRoll = bRoll;
+	struct FRotator UObject::STATIC_RotRand(bool bRoll)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RotRand");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_RotRand_Params params;
+		params.bRoll = bRoll;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetUnAxes
-// (Final, Native, Static, Public, HasOutParms)
-// Parameters:
-// struct FRotator                A                              (Parm)
-// struct FVector                 X                              (Parm, OutParm)
-// struct FVector                 Y                              (Parm, OutParm)
-// struct FVector                 Z                              (Parm, OutParm)
 
-void UObject::STATIC_GetUnAxes(const struct FRotator& A, struct FVector* X, struct FVector* Y, struct FVector* Z)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetUnAxes");
+	// Function Core.Object.GetUnAxes
+	// (Final, Native, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FRotator                A                              (Parm)
+	// struct FVector                 X                              (Parm, OutParm)
+	// struct FVector                 Y                              (Parm, OutParm)
+	// struct FVector                 Z                              (Parm, OutParm)
 
-	UObject_GetUnAxes_Params params;
-	params.A = A;
+	void UObject::STATIC_GetUnAxes(const struct FRotator& A, struct FVector* X, struct FVector* Y, struct FVector* Z)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetUnAxes");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetUnAxes_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (X != nullptr)
-		*X = params.X;
-	if (Y != nullptr)
-		*Y = params.Y;
-	if (Z != nullptr)
-		*Z = params.Z;
-}
+		fn->FunctionFlags = flags;
 
+		if (X != nullptr)
+			*X = params.X;
+		if (Y != nullptr)
+			*Y = params.Y;
+		if (Z != nullptr)
+			*Z = params.Z;
+	}
 
-// Function Core.Object.GetAxes
-// (Final, Native, Static, Public, HasOutParms)
-// Parameters:
-// struct FRotator                A                              (Parm)
-// struct FVector                 X                              (Parm, OutParm)
-// struct FVector                 Y                              (Parm, OutParm)
-// struct FVector                 Z                              (Parm, OutParm)
 
-void UObject::STATIC_GetAxes(const struct FRotator& A, struct FVector* X, struct FVector* Y, struct FVector* Z)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetAxes");
+	// Function Core.Object.GetAxes
+	// (Final, Native, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FRotator                A                              (Parm)
+	// struct FVector                 X                              (Parm, OutParm)
+	// struct FVector                 Y                              (Parm, OutParm)
+	// struct FVector                 Z                              (Parm, OutParm)
 
-	UObject_GetAxes_Params params;
-	params.A = A;
+	void UObject::STATIC_GetAxes(const struct FRotator& A, struct FVector* X, struct FVector* Y, struct FVector* Z)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetAxes");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetAxes_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (X != nullptr)
-		*X = params.X;
-	if (Y != nullptr)
-		*Y = params.Y;
-	if (Z != nullptr)
-		*Z = params.Z;
-}
+		fn->FunctionFlags = flags;
 
+		if (X != nullptr)
+			*X = params.X;
+		if (Y != nullptr)
+			*Y = params.Y;
+		if (Z != nullptr)
+			*Z = params.Z;
+	}
 
-// Function Core.Object.ClockwiseFrom_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_ClockwiseFrom_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ClockwiseFrom_IntInt");
+	// Function Core.Object.ClockwiseFrom_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_ClockwiseFrom_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_ClockwiseFrom_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ClockwiseFrom_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_ClockwiseFrom_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.SubtractEqual_RotatorRotator
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// struct FRotator                A                              (Parm, OutParm)
-// struct FRotator                B                              (Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_SubtractEqual_RotatorRotator(const struct FRotator& B, struct FRotator* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractEqual_RotatorRotator");
+	// Function Core.Object.SubtractEqual_RotatorRotator
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FRotator                A                              (Parm, OutParm)
+	// struct FRotator                B                              (Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_SubtractEqual_RotatorRotator_Params params;
-	params.B = B;
+	struct FRotator UObject::STATIC_SubtractEqual_RotatorRotator(const struct FRotator& B, struct FRotator* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractEqual_RotatorRotator");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_SubtractEqual_RotatorRotator_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.AddEqual_RotatorRotator
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// struct FRotator                A                              (Parm, OutParm)
-// struct FRotator                B                              (Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_AddEqual_RotatorRotator(const struct FRotator& B, struct FRotator* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddEqual_RotatorRotator");
+	// Function Core.Object.AddEqual_RotatorRotator
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FRotator                A                              (Parm, OutParm)
+	// struct FRotator                B                              (Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_AddEqual_RotatorRotator_Params params;
-	params.B = B;
+	struct FRotator UObject::STATIC_AddEqual_RotatorRotator(const struct FRotator& B, struct FRotator* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddEqual_RotatorRotator");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_AddEqual_RotatorRotator_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Subtract_RotatorRotator
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FRotator                A                              (Parm)
-// struct FRotator                B                              (Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_Subtract_RotatorRotator(const struct FRotator& A, const struct FRotator& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_RotatorRotator");
+	// Function Core.Object.Subtract_RotatorRotator
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FRotator                A                              (Parm)
+	// struct FRotator                B                              (Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Subtract_RotatorRotator_Params params;
-	params.A = A;
-	params.B = B;
+	struct FRotator UObject::STATIC_Subtract_RotatorRotator(const struct FRotator& A, const struct FRotator& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_RotatorRotator");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Subtract_RotatorRotator_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Add_RotatorRotator
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FRotator                A                              (Parm)
-// struct FRotator                B                              (Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_Add_RotatorRotator(const struct FRotator& A, const struct FRotator& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Add_RotatorRotator");
+	// Function Core.Object.Add_RotatorRotator
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FRotator                A                              (Parm)
+	// struct FRotator                B                              (Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Add_RotatorRotator_Params params;
-	params.A = A;
-	params.B = B;
+	struct FRotator UObject::STATIC_Add_RotatorRotator(const struct FRotator& A, const struct FRotator& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Add_RotatorRotator");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Add_RotatorRotator_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.DivideEqual_RotatorFloat
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// struct FRotator                A                              (Parm, OutParm)
-// float                          B                              (Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_DivideEqual_RotatorFloat(float B, struct FRotator* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DivideEqual_RotatorFloat");
+	// Function Core.Object.DivideEqual_RotatorFloat
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FRotator                A                              (Parm, OutParm)
+	// float                          B                              (Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_DivideEqual_RotatorFloat_Params params;
-	params.B = B;
+	struct FRotator UObject::STATIC_DivideEqual_RotatorFloat(float B, struct FRotator* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DivideEqual_RotatorFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_DivideEqual_RotatorFloat_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.MultiplyEqual_RotatorFloat
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// struct FRotator                A                              (Parm, OutParm)
-// float                          B                              (Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_MultiplyEqual_RotatorFloat(float B, struct FRotator* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyEqual_RotatorFloat");
+	// Function Core.Object.MultiplyEqual_RotatorFloat
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FRotator                A                              (Parm, OutParm)
+	// float                          B                              (Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_MultiplyEqual_RotatorFloat_Params params;
-	params.B = B;
+	struct FRotator UObject::STATIC_MultiplyEqual_RotatorFloat(float B, struct FRotator* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyEqual_RotatorFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_MultiplyEqual_RotatorFloat_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Divide_RotatorFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FRotator                A                              (Parm)
-// float                          B                              (Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_Divide_RotatorFloat(const struct FRotator& A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Divide_RotatorFloat");
+	// Function Core.Object.Divide_RotatorFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FRotator                A                              (Parm)
+	// float                          B                              (Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Divide_RotatorFloat_Params params;
-	params.A = A;
-	params.B = B;
+	struct FRotator UObject::STATIC_Divide_RotatorFloat(const struct FRotator& A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Divide_RotatorFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Divide_RotatorFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Multiply_FloatRotator
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// struct FRotator                B                              (Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_Multiply_FloatRotator(float A, const struct FRotator& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_FloatRotator");
+	// Function Core.Object.Multiply_FloatRotator
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// struct FRotator                B                              (Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Multiply_FloatRotator_Params params;
-	params.A = A;
-	params.B = B;
+	struct FRotator UObject::STATIC_Multiply_FloatRotator(float A, const struct FRotator& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_FloatRotator");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Multiply_FloatRotator_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Multiply_RotatorFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FRotator                A                              (Parm)
-// float                          B                              (Parm)
-// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FRotator UObject::STATIC_Multiply_RotatorFloat(const struct FRotator& A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_RotatorFloat");
+	// Function Core.Object.Multiply_RotatorFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FRotator                A                              (Parm)
+	// float                          B                              (Parm)
+	// struct FRotator                ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Multiply_RotatorFloat_Params params;
-	params.A = A;
-	params.B = B;
+	struct FRotator UObject::STATIC_Multiply_RotatorFloat(const struct FRotator& A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_RotatorFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Multiply_RotatorFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.NotEqual_RotatorRotator
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FRotator                A                              (Parm)
-// struct FRotator                B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_NotEqual_RotatorRotator(const struct FRotator& A, const struct FRotator& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_RotatorRotator");
+	// Function Core.Object.NotEqual_RotatorRotator
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FRotator                A                              (Parm)
+	// struct FRotator                B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_NotEqual_RotatorRotator_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_NotEqual_RotatorRotator(const struct FRotator& A, const struct FRotator& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_RotatorRotator");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_NotEqual_RotatorRotator_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.EqualEqual_RotatorRotator
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FRotator                A                              (Parm)
-// struct FRotator                B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_EqualEqual_RotatorRotator(const struct FRotator& A, const struct FRotator& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_RotatorRotator");
+	// Function Core.Object.EqualEqual_RotatorRotator
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FRotator                A                              (Parm)
+	// struct FRotator                B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_EqualEqual_RotatorRotator_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_EqualEqual_RotatorRotator(const struct FRotator& A, const struct FRotator& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_RotatorRotator");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_EqualEqual_RotatorRotator_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.ClampLength
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 V                              (Parm)
-// float                          MaxLength                      (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_ClampLength(const struct FVector& V, float MaxLength)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ClampLength");
+	// Function Core.Object.ClampLength
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 V                              (Parm)
+	// float                          MaxLength                      (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_ClampLength_Params params;
-	params.V = V;
-	params.MaxLength = MaxLength;
+	struct FVector UObject::STATIC_ClampLength(const struct FVector& V, float MaxLength)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ClampLength");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_ClampLength_Params params;
+		params.V = V;
+		params.MaxLength = MaxLength;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.VInterpTo
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 Current                        (Parm)
-// struct FVector                 Target                         (Parm)
-// float                          DeltaTime                      (Parm)
-// float                          InterpSpeed                    (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_VInterpTo(const struct FVector& Current, const struct FVector& Target, float DeltaTime, float InterpSpeed)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VInterpTo");
+	// Function Core.Object.VInterpTo
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 Current                        (Parm)
+	// struct FVector                 Target                         (Parm)
+	// float                          DeltaTime                      (Parm)
+	// float                          InterpSpeed                    (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_VInterpTo_Params params;
-	params.Current = Current;
-	params.Target = Target;
-	params.DeltaTime = DeltaTime;
-	params.InterpSpeed = InterpSpeed;
+	struct FVector UObject::STATIC_VInterpTo(const struct FVector& Current, const struct FVector& Target, float DeltaTime, float InterpSpeed)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VInterpTo");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_VInterpTo_Params params;
+		params.Current = Current;
+		params.Target = Target;
+		params.DeltaTime = DeltaTime;
+		params.InterpSpeed = InterpSpeed;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.IsZero
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_IsZero(const struct FVector& A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.IsZero");
+	// Function Core.Object.IsZero
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_IsZero_Params params;
-	params.A = A;
+	bool UObject::STATIC_IsZero(const struct FVector& A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.IsZero");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_IsZero_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.ProjectOnTo
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 X                              (Parm)
-// struct FVector                 Y                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_ProjectOnTo(const struct FVector& X, const struct FVector& Y)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ProjectOnTo");
+	// Function Core.Object.ProjectOnTo
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 X                              (Parm)
+	// struct FVector                 Y                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_ProjectOnTo_Params params;
-	params.X = X;
-	params.Y = Y;
+	struct FVector UObject::STATIC_ProjectOnTo(const struct FVector& X, const struct FVector& Y)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ProjectOnTo");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_ProjectOnTo_Params params;
+		params.X = X;
+		params.Y = Y;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.MirrorVectorByNormal
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 InVect                         (Parm)
-// struct FVector                 InNormal                       (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_MirrorVectorByNormal(const struct FVector& InVect, const struct FVector& InNormal)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MirrorVectorByNormal");
+	// Function Core.Object.MirrorVectorByNormal
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 InVect                         (Parm)
+	// struct FVector                 InNormal                       (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_MirrorVectorByNormal_Params params;
-	params.InVect = InVect;
-	params.InNormal = InNormal;
+	struct FVector UObject::STATIC_MirrorVectorByNormal(const struct FVector& InVect, const struct FVector& InNormal)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MirrorVectorByNormal");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_MirrorVectorByNormal_Params params;
+		params.InVect = InVect;
+		params.InNormal = InNormal;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.VRand
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_VRand()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VRand");
+	// Function Core.Object.VRand
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_VRand_Params params;
+	struct FVector UObject::STATIC_VRand()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VRand");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_VRand_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.VSmerp
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 B                              (Parm)
-// float                          Alpha                          (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_VSmerp(const struct FVector& A, const struct FVector& B, float Alpha)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VSmerp");
+	// Function Core.Object.VSmerp
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// float                          Alpha                          (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_VSmerp_Params params;
-	params.A = A;
-	params.B = B;
-	params.Alpha = Alpha;
+	struct FVector UObject::STATIC_VSmerp(const struct FVector& A, const struct FVector& B, float Alpha)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VSmerp");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_VSmerp_Params params;
+		params.A = A;
+		params.B = B;
+		params.Alpha = Alpha;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.VLerp
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 B                              (Parm)
-// float                          Alpha                          (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_VLerp(const struct FVector& A, const struct FVector& B, float Alpha)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VLerp");
+	// Function Core.Object.VLerp
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// float                          Alpha                          (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_VLerp_Params params;
-	params.A = A;
-	params.B = B;
-	params.Alpha = Alpha;
+	struct FVector UObject::STATIC_VLerp(const struct FVector& A, const struct FVector& B, float Alpha)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VLerp");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_VLerp_Params params;
+		params.A = A;
+		params.B = B;
+		params.Alpha = Alpha;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Normal
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_Normal(const struct FVector& A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Normal");
+	// Function Core.Object.Normal
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Normal_Params params;
-	params.A = A;
+	struct FVector UObject::STATIC_Normal(const struct FVector& A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Normal");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Normal_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.VSizeSq2D
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_VSizeSq2D(const struct FVector& A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VSizeSq2D");
+	// Function Core.Object.VSizeSq2D
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_VSizeSq2D_Params params;
-	params.A = A;
+	float UObject::STATIC_VSizeSq2D(const struct FVector& A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VSizeSq2D");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_VSizeSq2D_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.VSizeSq
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_VSizeSq(const struct FVector& A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VSizeSq");
+	// Function Core.Object.VSizeSq
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_VSizeSq_Params params;
-	params.A = A;
+	float UObject::STATIC_VSizeSq(const struct FVector& A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VSizeSq");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_VSizeSq_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.VSize2D
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_VSize2D(const struct FVector& A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VSize2D");
+	// Function Core.Object.VSize2D
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_VSize2D_Params params;
-	params.A = A;
+	float UObject::STATIC_VSize2D(const struct FVector& A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VSize2D");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_VSize2D_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.VSize
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_VSize(const struct FVector& A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VSize");
+	// Function Core.Object.VSize
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_VSize_Params params;
-	params.A = A;
+	float UObject::STATIC_VSize(const struct FVector& A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.VSize");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_VSize_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.SubtractEqual_VectorVector
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// struct FVector                 A                              (Parm, OutParm)
-// struct FVector                 B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_SubtractEqual_VectorVector(const struct FVector& B, struct FVector* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractEqual_VectorVector");
+	// Function Core.Object.SubtractEqual_VectorVector
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FVector                 A                              (Parm, OutParm)
+	// struct FVector                 B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_SubtractEqual_VectorVector_Params params;
-	params.B = B;
+	struct FVector UObject::STATIC_SubtractEqual_VectorVector(const struct FVector& B, struct FVector* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractEqual_VectorVector");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_SubtractEqual_VectorVector_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.AddEqual_VectorVector
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// struct FVector                 A                              (Parm, OutParm)
-// struct FVector                 B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_AddEqual_VectorVector(const struct FVector& B, struct FVector* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddEqual_VectorVector");
+	// Function Core.Object.AddEqual_VectorVector
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FVector                 A                              (Parm, OutParm)
+	// struct FVector                 B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_AddEqual_VectorVector_Params params;
-	params.B = B;
+	struct FVector UObject::STATIC_AddEqual_VectorVector(const struct FVector& B, struct FVector* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddEqual_VectorVector");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_AddEqual_VectorVector_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.DivideEqual_VectorFloat
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// struct FVector                 A                              (Parm, OutParm)
-// float                          B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_DivideEqual_VectorFloat(float B, struct FVector* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DivideEqual_VectorFloat");
+	// Function Core.Object.DivideEqual_VectorFloat
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FVector                 A                              (Parm, OutParm)
+	// float                          B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_DivideEqual_VectorFloat_Params params;
-	params.B = B;
+	struct FVector UObject::STATIC_DivideEqual_VectorFloat(float B, struct FVector* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DivideEqual_VectorFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_DivideEqual_VectorFloat_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.MultiplyEqual_VectorVector
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// struct FVector                 A                              (Parm, OutParm)
-// struct FVector                 B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_MultiplyEqual_VectorVector(const struct FVector& B, struct FVector* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyEqual_VectorVector");
+	// Function Core.Object.MultiplyEqual_VectorVector
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FVector                 A                              (Parm, OutParm)
+	// struct FVector                 B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_MultiplyEqual_VectorVector_Params params;
-	params.B = B;
+	struct FVector UObject::STATIC_MultiplyEqual_VectorVector(const struct FVector& B, struct FVector* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyEqual_VectorVector");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_MultiplyEqual_VectorVector_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.MultiplyEqual_VectorFloat
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// struct FVector                 A                              (Parm, OutParm)
-// float                          B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_MultiplyEqual_VectorFloat(float B, struct FVector* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyEqual_VectorFloat");
+	// Function Core.Object.MultiplyEqual_VectorFloat
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// struct FVector                 A                              (Parm, OutParm)
+	// float                          B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_MultiplyEqual_VectorFloat_Params params;
-	params.B = B;
+	struct FVector UObject::STATIC_MultiplyEqual_VectorFloat(float B, struct FVector* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyEqual_VectorFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_MultiplyEqual_VectorFloat_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Cross_VectorVector
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_Cross_VectorVector(const struct FVector& A, const struct FVector& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Cross_VectorVector");
+	// Function Core.Object.Cross_VectorVector
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Cross_VectorVector_Params params;
-	params.A = A;
-	params.B = B;
+	struct FVector UObject::STATIC_Cross_VectorVector(const struct FVector& A, const struct FVector& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Cross_VectorVector");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Cross_VectorVector_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Dot_VectorVector
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Dot_VectorVector(const struct FVector& A, const struct FVector& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Dot_VectorVector");
+	// Function Core.Object.Dot_VectorVector
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Dot_VectorVector_Params params;
-	params.A = A;
-	params.B = B;
+	float UObject::STATIC_Dot_VectorVector(const struct FVector& A, const struct FVector& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Dot_VectorVector");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Dot_VectorVector_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.NotEqual_VectorVector
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_NotEqual_VectorVector(const struct FVector& A, const struct FVector& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_VectorVector");
+	// Function Core.Object.NotEqual_VectorVector
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_NotEqual_VectorVector_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_NotEqual_VectorVector(const struct FVector& A, const struct FVector& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_VectorVector");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_NotEqual_VectorVector_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.EqualEqual_VectorVector
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_EqualEqual_VectorVector(const struct FVector& A, const struct FVector& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_VectorVector");
+	// Function Core.Object.EqualEqual_VectorVector
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_EqualEqual_VectorVector_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_EqualEqual_VectorVector(const struct FVector& A, const struct FVector& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_VectorVector");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_EqualEqual_VectorVector_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GreaterGreater_VectorRotator
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FRotator                B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_GreaterGreater_VectorRotator(const struct FVector& A, const struct FRotator& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GreaterGreater_VectorRotator");
+	// Function Core.Object.GreaterGreater_VectorRotator
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FRotator                B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GreaterGreater_VectorRotator_Params params;
-	params.A = A;
-	params.B = B;
+	struct FVector UObject::STATIC_GreaterGreater_VectorRotator(const struct FVector& A, const struct FRotator& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GreaterGreater_VectorRotator");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GreaterGreater_VectorRotator_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.LessLess_VectorRotator
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FRotator                B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_LessLess_VectorRotator(const struct FVector& A, const struct FRotator& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.LessLess_VectorRotator");
+	// Function Core.Object.LessLess_VectorRotator
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FRotator                B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_LessLess_VectorRotator_Params params;
-	params.A = A;
-	params.B = B;
+	struct FVector UObject::STATIC_LessLess_VectorRotator(const struct FVector& A, const struct FRotator& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.LessLess_VectorRotator");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_LessLess_VectorRotator_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Subtract_VectorVector
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_Subtract_VectorVector(const struct FVector& A, const struct FVector& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_VectorVector");
+	// Function Core.Object.Subtract_VectorVector
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Subtract_VectorVector_Params params;
-	params.A = A;
-	params.B = B;
+	struct FVector UObject::STATIC_Subtract_VectorVector(const struct FVector& A, const struct FVector& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_VectorVector");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Subtract_VectorVector_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Add_VectorVector
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_Add_VectorVector(const struct FVector& A, const struct FVector& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Add_VectorVector");
+	// Function Core.Object.Add_VectorVector
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Add_VectorVector_Params params;
-	params.A = A;
-	params.B = B;
+	struct FVector UObject::STATIC_Add_VectorVector(const struct FVector& A, const struct FVector& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Add_VectorVector");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Add_VectorVector_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Divide_VectorFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// float                          B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_Divide_VectorFloat(const struct FVector& A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Divide_VectorFloat");
+	// Function Core.Object.Divide_VectorFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// float                          B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Divide_VectorFloat_Params params;
-	params.A = A;
-	params.B = B;
+	struct FVector UObject::STATIC_Divide_VectorFloat(const struct FVector& A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Divide_VectorFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Divide_VectorFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Multiply_VectorVector
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_Multiply_VectorVector(const struct FVector& A, const struct FVector& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_VectorVector");
+	// Function Core.Object.Multiply_VectorVector
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Multiply_VectorVector_Params params;
-	params.A = A;
-	params.B = B;
+	struct FVector UObject::STATIC_Multiply_VectorVector(const struct FVector& A, const struct FVector& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_VectorVector");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Multiply_VectorVector_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Multiply_FloatVector
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// struct FVector                 B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_Multiply_FloatVector(float A, const struct FVector& B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_FloatVector");
+	// Function Core.Object.Multiply_FloatVector
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// struct FVector                 B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Multiply_FloatVector_Params params;
-	params.A = A;
-	params.B = B;
+	struct FVector UObject::STATIC_Multiply_FloatVector(float A, const struct FVector& B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_FloatVector");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Multiply_FloatVector_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Multiply_VectorFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// float                          B                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_Multiply_VectorFloat(const struct FVector& A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_VectorFloat");
+	// Function Core.Object.Multiply_VectorFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// float                          B                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Multiply_VectorFloat_Params params;
-	params.A = A;
-	params.B = B;
+	struct FVector UObject::STATIC_Multiply_VectorFloat(const struct FVector& A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_VectorFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Multiply_VectorFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Subtract_PreVector
-// (Final, PreOperator, Native, Operator, Static, Public)
-// Parameters:
-// struct FVector                 A                              (Parm)
-// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-struct FVector UObject::STATIC_Subtract_PreVector(const struct FVector& A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_PreVector");
+	// Function Core.Object.Subtract_PreVector
+	// (Final, PreOperator, Native, Operator, Static, Public)
+	// Parameters:
+	// struct FVector                 A                              (Parm)
+	// struct FVector                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Subtract_PreVector_Params params;
-	params.A = A;
+	struct FVector UObject::STATIC_Subtract_PreVector(const struct FVector& A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_PreVector");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Subtract_PreVector_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetStringInfo
-// (Final, Native, Static, Public)
-// Parameters:
-// struct FBioStrRes              ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FBioStrRes UObject::STATIC_GetStringInfo()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetStringInfo");
+	// Function Core.Object.GetStringInfo
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// struct FBioStrRes              ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_GetStringInfo_Params params;
+	struct FBioStrRes UObject::STATIC_GetStringInfo()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetStringInfo");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetStringInfo_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.SetCustomToken
-// (Final, Native, Static, Public)
-// Parameters:
-// int                            nTokenNum                      (Parm)
-// struct FString                 sToken                         (Parm, NeedCtorLink)
 
-void UObject::STATIC_SetCustomToken(int nTokenNum, const struct FString& sToken)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SetCustomToken");
+	// Function Core.Object.SetCustomToken
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// int                            nTokenNum                      (Parm)
+	// struct FString                 sToken                         (Parm, NeedCtorLink)
 
-	UObject_SetCustomToken_Params params;
-	params.nTokenNum = nTokenNum;
-	params.sToken = sToken;
+	void UObject::STATIC_SetCustomToken(int nTokenNum, const struct FString& sToken)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SetCustomToken");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_SetCustomToken_Params params;
+		params.nTokenNum = nTokenNum;
+		params.sToken = sToken;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.ClearCustomTokens
-// (Final, Native, Static, Public)
 
-void UObject::STATIC_ClearCustomTokens()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ClearCustomTokens");
+	// Function Core.Object.ClearCustomTokens
+	// (Final, Native, Static, Public)
 
-	UObject_ClearCustomTokens_Params params;
+	void UObject::STATIC_ClearCustomTokens()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ClearCustomTokens");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_ClearCustomTokens_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.RemoveTalkFile
-// (Final, Native, Static, Public)
-// Parameters:
-// class UBioBaseTlkFile*         TalkFile                       (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_RemoveTalkFile(class UBioBaseTlkFile* TalkFile)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RemoveTalkFile");
+	// Function Core.Object.RemoveTalkFile
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// class UBioBaseTlkFile*         TalkFile                       (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_RemoveTalkFile_Params params;
-	params.TalkFile = TalkFile;
+	bool UObject::STATIC_RemoveTalkFile(class UBioBaseTlkFile* TalkFile)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RemoveTalkFile");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_RemoveTalkFile_Params params;
+		params.TalkFile = TalkFile;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.AddTalkFile
-// (Final, Native, Static, Public)
-// Parameters:
-// class UBioBaseTlkFile*         TalkFile                       (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_AddTalkFile(class UBioBaseTlkFile* TalkFile)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddTalkFile");
+	// Function Core.Object.AddTalkFile
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// class UBioBaseTlkFile*         TalkFile                       (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_AddTalkFile_Params params;
-	params.TalkFile = TalkFile;
+	bool UObject::STATIC_AddTalkFile(class UBioBaseTlkFile* TalkFile)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddTalkFile");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_AddTalkFile_Params params;
+		params.TalkFile = TalkFile;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.SetGlobalPhysics
-// (Native, Public)
-// Parameters:
-// bool                           bPhysicsOn                     (Parm)
 
-void UObject::SetGlobalPhysics(bool bPhysicsOn)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SetGlobalPhysics");
+	// Function Core.Object.SetGlobalPhysics
+	// (Native, Public)
+	// Parameters:
+	// bool                           bPhysicsOn                     (Parm)
 
-	UObject_SetGlobalPhysics_Params params;
-	params.bPhysicsOn = bPhysicsOn;
+	void UObject::SetGlobalPhysics(bool bPhysicsOn)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SetGlobalPhysics");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_SetGlobalPhysics_Params params;
+		params.bPhysicsOn = bPhysicsOn;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.DynamicLoadDefaultResource
-// (Native, Public)
-// Parameters:
-// struct FString                 sIniKey                        (Parm, NeedCtorLink)
-// class UClass*                  ExpectedClass                  (Parm)
-// class UObject*                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-class UObject* UObject::DynamicLoadDefaultResource(const struct FString& sIniKey, class UClass* ExpectedClass)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DynamicLoadDefaultResource");
+	// Function Core.Object.DynamicLoadDefaultResource
+	// (Native, Public)
+	// Parameters:
+	// struct FString                 sIniKey                        (Parm, NeedCtorLink)
+	// class UClass*                  ExpectedClass                  (Parm)
+	// class UObject*                 ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_DynamicLoadDefaultResource_Params params;
-	params.sIniKey = sIniKey;
-	params.ExpectedClass = ExpectedClass;
+	class UObject* UObject::DynamicLoadDefaultResource(const struct FString& sIniKey, class UClass* ExpectedClass)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DynamicLoadDefaultResource");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_DynamicLoadDefaultResource_Params params;
+		params.sIniKey = sIniKey;
+		params.ExpectedClass = ExpectedClass;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetIniBool
-// (Native, Public, HasOutParms)
-// Parameters:
-// struct FString                 sFile                          (Parm, NeedCtorLink)
-// struct FString                 sSection                       (Parm, NeedCtorLink)
-// struct FString                 sKey                           (Parm, NeedCtorLink)
-// unsigned char                  bResult                        (Parm, OutParm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::GetIniBool(const struct FString& sFile, const struct FString& sSection, const struct FString& sKey, unsigned char* bResult)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetIniBool");
+	// Function Core.Object.GetIniBool
+	// (Native, Public, HasOutParms)
+	// Parameters:
+	// struct FString                 sFile                          (Parm, NeedCtorLink)
+	// struct FString                 sSection                       (Parm, NeedCtorLink)
+	// struct FString                 sKey                           (Parm, NeedCtorLink)
+	// unsigned char                  bResult                        (Parm, OutParm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetIniBool_Params params;
-	params.sFile = sFile;
-	params.sSection = sSection;
-	params.sKey = sKey;
+	bool UObject::GetIniBool(const struct FString& sFile, const struct FString& sSection, const struct FString& sKey, unsigned char* bResult)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetIniBool");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetIniBool_Params params;
+		params.sFile = sFile;
+		params.sSection = sSection;
+		params.sKey = sKey;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (bResult != nullptr)
-		*bResult = params.bResult;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (bResult != nullptr)
+			*bResult = params.bResult;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetIniArray
-// (Native, Public, HasOutParms)
-// Parameters:
-// struct FString                 sFile                          (Parm, NeedCtorLink)
-// struct FString                 sSection                       (Parm, NeedCtorLink)
-// struct FString                 sKey                           (Parm, NeedCtorLink)
-// TArray<struct FString>         aResult                        (Parm, OutParm, NeedCtorLink)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::GetIniArray(const struct FString& sFile, const struct FString& sSection, const struct FString& sKey, TArray<struct FString>* aResult)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetIniArray");
+	// Function Core.Object.GetIniArray
+	// (Native, Public, HasOutParms)
+	// Parameters:
+	// struct FString                 sFile                          (Parm, NeedCtorLink)
+	// struct FString                 sSection                       (Parm, NeedCtorLink)
+	// struct FString                 sKey                           (Parm, NeedCtorLink)
+	// TArray<struct FString>         aResult                        (Parm, OutParm, NeedCtorLink)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetIniArray_Params params;
-	params.sFile = sFile;
-	params.sSection = sSection;
-	params.sKey = sKey;
+	bool UObject::GetIniArray(const struct FString& sFile, const struct FString& sSection, const struct FString& sKey, TArray<struct FString>* aResult)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetIniArray");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetIniArray_Params params;
+		params.sFile = sFile;
+		params.sSection = sSection;
+		params.sKey = sKey;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (aResult != nullptr)
-		*aResult = params.aResult;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (aResult != nullptr)
+			*aResult = params.aResult;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetIniFloat
-// (Native, Public, HasOutParms)
-// Parameters:
-// struct FString                 sFile                          (Parm, NeedCtorLink)
-// struct FString                 sSection                       (Parm, NeedCtorLink)
-// struct FString                 sKey                           (Parm, NeedCtorLink)
-// float                          fResult                        (Parm, OutParm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::GetIniFloat(const struct FString& sFile, const struct FString& sSection, const struct FString& sKey, float* fResult)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetIniFloat");
+	// Function Core.Object.GetIniFloat
+	// (Native, Public, HasOutParms)
+	// Parameters:
+	// struct FString                 sFile                          (Parm, NeedCtorLink)
+	// struct FString                 sSection                       (Parm, NeedCtorLink)
+	// struct FString                 sKey                           (Parm, NeedCtorLink)
+	// float                          fResult                        (Parm, OutParm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetIniFloat_Params params;
-	params.sFile = sFile;
-	params.sSection = sSection;
-	params.sKey = sKey;
+	bool UObject::GetIniFloat(const struct FString& sFile, const struct FString& sSection, const struct FString& sKey, float* fResult)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetIniFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetIniFloat_Params params;
+		params.sFile = sFile;
+		params.sSection = sSection;
+		params.sKey = sKey;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (fResult != nullptr)
-		*fResult = params.fResult;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (fResult != nullptr)
+			*fResult = params.fResult;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetIniInt
-// (Native, Public, HasOutParms)
-// Parameters:
-// struct FString                 sFile                          (Parm, NeedCtorLink)
-// struct FString                 sSection                       (Parm, NeedCtorLink)
-// struct FString                 sKey                           (Parm, NeedCtorLink)
-// int                            nResult                        (Parm, OutParm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::GetIniInt(const struct FString& sFile, const struct FString& sSection, const struct FString& sKey, int* nResult)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetIniInt");
+	// Function Core.Object.GetIniInt
+	// (Native, Public, HasOutParms)
+	// Parameters:
+	// struct FString                 sFile                          (Parm, NeedCtorLink)
+	// struct FString                 sSection                       (Parm, NeedCtorLink)
+	// struct FString                 sKey                           (Parm, NeedCtorLink)
+	// int                            nResult                        (Parm, OutParm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetIniInt_Params params;
-	params.sFile = sFile;
-	params.sSection = sSection;
-	params.sKey = sKey;
+	bool UObject::GetIniInt(const struct FString& sFile, const struct FString& sSection, const struct FString& sKey, int* nResult)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetIniInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetIniInt_Params params;
+		params.sFile = sFile;
+		params.sSection = sSection;
+		params.sKey = sKey;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (nResult != nullptr)
-		*nResult = params.nResult;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (nResult != nullptr)
+			*nResult = params.nResult;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GetIniString
-// (Native, Public, HasOutParms)
-// Parameters:
-// struct FString                 sFile                          (Parm, NeedCtorLink)
-// struct FString                 sSection                       (Parm, NeedCtorLink)
-// struct FString                 sKey                           (Parm, NeedCtorLink)
-// struct FString                 sResult                        (Parm, OutParm, NeedCtorLink)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::GetIniString(const struct FString& sFile, const struct FString& sSection, const struct FString& sKey, struct FString* sResult)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetIniString");
+	// Function Core.Object.GetIniString
+	// (Native, Public, HasOutParms)
+	// Parameters:
+	// struct FString                 sFile                          (Parm, NeedCtorLink)
+	// struct FString                 sSection                       (Parm, NeedCtorLink)
+	// struct FString                 sKey                           (Parm, NeedCtorLink)
+	// struct FString                 sResult                        (Parm, OutParm, NeedCtorLink)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GetIniString_Params params;
-	params.sFile = sFile;
-	params.sSection = sSection;
-	params.sKey = sKey;
+	bool UObject::GetIniString(const struct FString& sFile, const struct FString& sSection, const struct FString& sKey, struct FString* sResult)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GetIniString");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GetIniString_Params params;
+		params.sFile = sFile;
+		params.sSection = sSection;
+		params.sKey = sKey;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (sResult != nullptr)
-		*sResult = params.sResult;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (sResult != nullptr)
+			*sResult = params.sResult;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.DoDebugAction
-// (Native, Public)
-// Parameters:
-// int                            nAction                        (Parm)
 
-void UObject::DoDebugAction(int nAction)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DoDebugAction");
+	// Function Core.Object.DoDebugAction
+	// (Native, Public)
+	// Parameters:
+	// int                            nAction                        (Parm)
 
-	UObject_DoDebugAction_Params params;
-	params.nAction = nAction;
+	void UObject::DoDebugAction(int nAction)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DoDebugAction");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_DoDebugAction_Params params;
+		params.nAction = nAction;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
-}
+		UObject::ProcessEvent(fn, &params);
 
+		fn->FunctionFlags = flags;
+	}
 
-// Function Core.Object.FInterpTo
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          Current                        (Parm)
-// float                          Target                         (Parm)
-// float                          DeltaTime                      (Parm)
-// float                          InterpSpeed                    (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_FInterpTo(float Current, float Target, float DeltaTime, float InterpSpeed)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FInterpTo");
+	// Function Core.Object.FInterpTo
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          Current                        (Parm)
+	// float                          Target                         (Parm)
+	// float                          DeltaTime                      (Parm)
+	// float                          InterpSpeed                    (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_FInterpTo_Params params;
-	params.Current = Current;
-	params.Target = Target;
-	params.DeltaTime = DeltaTime;
-	params.InterpSpeed = InterpSpeed;
+	float UObject::STATIC_FInterpTo(float Current, float Target, float DeltaTime, float InterpSpeed)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FInterpTo");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_FInterpTo_Params params;
+		params.Current = Current;
+		params.Target = Target;
+		params.DeltaTime = DeltaTime;
+		params.InterpSpeed = InterpSpeed;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.FPctByRange
-// (Final, Defined, Simulated, Static, Public)
-// Parameters:
-// float                          Value                          (Parm)
-// float                          InMin                          (Parm)
-// float                          InMax                          (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_FPctByRange(float Value, float InMin, float InMax)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FPctByRange");
+	// Function Core.Object.FPctByRange
+	// (Final, Defined, Simulated, Static, Public)
+	// Parameters:
+	// float                          Value                          (Parm)
+	// float                          InMin                          (Parm)
+	// float                          InMax                          (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_FPctByRange_Params params;
-	params.Value = Value;
-	params.InMin = InMin;
-	params.InMax = InMax;
+	float UObject::STATIC_FPctByRange(float Value, float InMin, float InMax)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FPctByRange");
 
-	auto flags = fn->FunctionFlags;
+		UObject_FPctByRange_Params params;
+		params.Value = Value;
+		params.InMin = InMin;
+		params.InMax = InMax;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.RandRange
-// (Final, Defined, Simulated, Static, Public)
-// Parameters:
-// float                          InMin                          (Parm)
-// float                          InMax                          (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_RandRange(float InMin, float InMax)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RandRange");
+	// Function Core.Object.RandRange
+	// (Final, Defined, Simulated, Static, Public)
+	// Parameters:
+	// float                          InMin                          (Parm)
+	// float                          InMax                          (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_RandRange_Params params;
-	params.InMin = InMin;
-	params.InMax = InMax;
+	float UObject::STATIC_RandRange(float InMin, float InMax)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.RandRange");
 
-	auto flags = fn->FunctionFlags;
+		UObject_RandRange_Params params;
+		params.InMin = InMin;
+		params.InMax = InMax;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.FCubicInterp
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          P0                             (Parm)
-// float                          T0                             (Parm)
-// float                          P1                             (Parm)
-// float                          T1                             (Parm)
-// float                          A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_FCubicInterp(float P0, float T0, float P1, float T1, float A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FCubicInterp");
+	// Function Core.Object.FCubicInterp
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          P0                             (Parm)
+	// float                          T0                             (Parm)
+	// float                          P1                             (Parm)
+	// float                          T1                             (Parm)
+	// float                          A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_FCubicInterp_Params params;
-	params.P0 = P0;
-	params.T0 = T0;
-	params.P1 = P1;
-	params.T1 = T1;
-	params.A = A;
+	float UObject::STATIC_FCubicInterp(float P0, float T0, float P1, float T1, float A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FCubicInterp");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_FCubicInterp_Params params;
+		params.P0 = P0;
+		params.T0 = T0;
+		params.P1 = P1;
+		params.T1 = T1;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Lerp
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// float                          Alpha                          (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Lerp(float A, float B, float Alpha)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Lerp");
+	// Function Core.Object.Lerp
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// float                          Alpha                          (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Lerp_Params params;
-	params.A = A;
-	params.B = B;
-	params.Alpha = Alpha;
+	float UObject::STATIC_Lerp(float A, float B, float Alpha)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Lerp");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Lerp_Params params;
+		params.A = A;
+		params.B = B;
+		params.Alpha = Alpha;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.FClamp
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          V                              (Parm)
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_FClamp(float V, float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FClamp");
+	// Function Core.Object.FClamp
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          V                              (Parm)
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_FClamp_Params params;
-	params.V = V;
-	params.A = A;
-	params.B = B;
+	float UObject::STATIC_FClamp(float V, float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FClamp");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_FClamp_Params params;
+		params.V = V;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.FMax
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_FMax(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FMax");
+	// Function Core.Object.FMax
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_FMax_Params params;
-	params.A = A;
-	params.B = B;
+	float UObject::STATIC_FMax(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FMax");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_FMax_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.FMin
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_FMin(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FMin");
+	// Function Core.Object.FMin
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_FMin_Params params;
-	params.A = A;
-	params.B = B;
+	float UObject::STATIC_FMin(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FMin");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_FMin_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.FRand
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_FRand()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FRand");
+	// Function Core.Object.FRand
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_FRand_Params params;
+	float UObject::STATIC_FRand()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.FRand");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_FRand_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Pow
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          Base                           (Parm)
-// float                          Exp                            (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Pow(float Base, float Exp)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Pow");
+	// Function Core.Object.Pow
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          Base                           (Parm)
+	// float                          Exp                            (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Pow_Params params;
-	params.Base = Base;
-	params.Exp = Exp;
+	float UObject::STATIC_Pow(float Base, float Exp)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Pow");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Pow_Params params;
+		params.Base = Base;
+		params.Exp = Exp;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Square
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Square(float A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Square");
+	// Function Core.Object.Square
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Square_Params params;
-	params.A = A;
+	float UObject::STATIC_Square(float A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Square");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Square_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Sqrt
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Sqrt(float A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Sqrt");
+	// Function Core.Object.Sqrt
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Sqrt_Params params;
-	params.A = A;
+	float UObject::STATIC_Sqrt(float A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Sqrt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Sqrt_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Loge
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Loge(float A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Loge");
+	// Function Core.Object.Loge
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Loge_Params params;
-	params.A = A;
+	float UObject::STATIC_Loge(float A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Loge");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Loge_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Exp
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Exp(float A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Exp");
+	// Function Core.Object.Exp
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Exp_Params params;
-	params.A = A;
+	float UObject::STATIC_Exp(float A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Exp");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Exp_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Atan
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Atan(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Atan");
+	// Function Core.Object.Atan
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Atan_Params params;
-	params.A = A;
-	params.B = B;
+	float UObject::STATIC_Atan(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Atan");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Atan_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Tan
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Tan(float A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Tan");
+	// Function Core.Object.Tan
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Tan_Params params;
-	params.A = A;
+	float UObject::STATIC_Tan(float A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Tan");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Tan_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Acos
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Acos(float A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Acos");
+	// Function Core.Object.Acos
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Acos_Params params;
-	params.A = A;
+	float UObject::STATIC_Acos(float A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Acos");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Acos_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Cos
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Cos(float A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Cos");
+	// Function Core.Object.Cos
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Cos_Params params;
-	params.A = A;
+	float UObject::STATIC_Cos(float A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Cos");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Cos_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Asin
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Asin(float A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Asin");
+	// Function Core.Object.Asin
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Asin_Params params;
-	params.A = A;
+	float UObject::STATIC_Asin(float A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Asin");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Asin_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Sin
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Sin(float A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Sin");
+	// Function Core.Object.Sin
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Sin_Params params;
-	params.A = A;
+	float UObject::STATIC_Sin(float A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Sin");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Sin_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Abs
-// (Final, Native, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Abs(float A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Abs");
+	// Function Core.Object.Abs
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Abs_Params params;
-	params.A = A;
+	float UObject::STATIC_Abs(float A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Abs");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Abs_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.SubtractEqual_FloatFloat
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// float                          A                              (Parm, OutParm)
-// float                          B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_SubtractEqual_FloatFloat(float B, float* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractEqual_FloatFloat");
+	// Function Core.Object.SubtractEqual_FloatFloat
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// float                          A                              (Parm, OutParm)
+	// float                          B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_SubtractEqual_FloatFloat_Params params;
-	params.B = B;
+	float UObject::STATIC_SubtractEqual_FloatFloat(float B, float* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractEqual_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_SubtractEqual_FloatFloat_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.AddEqual_FloatFloat
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// float                          A                              (Parm, OutParm)
-// float                          B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_AddEqual_FloatFloat(float B, float* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddEqual_FloatFloat");
+	// Function Core.Object.AddEqual_FloatFloat
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// float                          A                              (Parm, OutParm)
+	// float                          B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_AddEqual_FloatFloat_Params params;
-	params.B = B;
+	float UObject::STATIC_AddEqual_FloatFloat(float B, float* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddEqual_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_AddEqual_FloatFloat_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.DivideEqual_FloatFloat
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// float                          A                              (Parm, OutParm)
-// float                          B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_DivideEqual_FloatFloat(float B, float* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DivideEqual_FloatFloat");
+	// Function Core.Object.DivideEqual_FloatFloat
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// float                          A                              (Parm, OutParm)
+	// float                          B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_DivideEqual_FloatFloat_Params params;
-	params.B = B;
+	float UObject::STATIC_DivideEqual_FloatFloat(float B, float* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DivideEqual_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_DivideEqual_FloatFloat_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.MultiplyEqual_FloatFloat
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// float                          A                              (Parm, OutParm)
-// float                          B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_MultiplyEqual_FloatFloat(float B, float* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyEqual_FloatFloat");
+	// Function Core.Object.MultiplyEqual_FloatFloat
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// float                          A                              (Parm, OutParm)
+	// float                          B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_MultiplyEqual_FloatFloat_Params params;
-	params.B = B;
+	float UObject::STATIC_MultiplyEqual_FloatFloat(float B, float* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyEqual_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_MultiplyEqual_FloatFloat_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.NotEqual_FloatFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_NotEqual_FloatFloat(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_FloatFloat");
+	// Function Core.Object.NotEqual_FloatFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_NotEqual_FloatFloat_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_NotEqual_FloatFloat(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_NotEqual_FloatFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.ComplementEqual_FloatFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_ComplementEqual_FloatFloat(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ComplementEqual_FloatFloat");
+	// Function Core.Object.ComplementEqual_FloatFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_ComplementEqual_FloatFloat_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_ComplementEqual_FloatFloat(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ComplementEqual_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_ComplementEqual_FloatFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.EqualEqual_FloatFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_EqualEqual_FloatFloat(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_FloatFloat");
+	// Function Core.Object.EqualEqual_FloatFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_EqualEqual_FloatFloat_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_EqualEqual_FloatFloat(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_EqualEqual_FloatFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GreaterEqual_FloatFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_GreaterEqual_FloatFloat(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GreaterEqual_FloatFloat");
+	// Function Core.Object.GreaterEqual_FloatFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GreaterEqual_FloatFloat_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_GreaterEqual_FloatFloat(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GreaterEqual_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GreaterEqual_FloatFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.LessEqual_FloatFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_LessEqual_FloatFloat(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.LessEqual_FloatFloat");
+	// Function Core.Object.LessEqual_FloatFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_LessEqual_FloatFloat_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_LessEqual_FloatFloat(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.LessEqual_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_LessEqual_FloatFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Greater_FloatFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_Greater_FloatFloat(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Greater_FloatFloat");
+	// Function Core.Object.Greater_FloatFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Greater_FloatFloat_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_Greater_FloatFloat(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Greater_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Greater_FloatFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Less_FloatFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_Less_FloatFloat(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Less_FloatFloat");
+	// Function Core.Object.Less_FloatFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Less_FloatFloat_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_Less_FloatFloat(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Less_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Less_FloatFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Subtract_FloatFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Subtract_FloatFloat(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_FloatFloat");
+	// Function Core.Object.Subtract_FloatFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Subtract_FloatFloat_Params params;
-	params.A = A;
-	params.B = B;
+	float UObject::STATIC_Subtract_FloatFloat(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Subtract_FloatFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Add_FloatFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Add_FloatFloat(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Add_FloatFloat");
+	// Function Core.Object.Add_FloatFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Add_FloatFloat_Params params;
-	params.A = A;
-	params.B = B;
+	float UObject::STATIC_Add_FloatFloat(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Add_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Add_FloatFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Percent_FloatFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Percent_FloatFloat(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Percent_FloatFloat");
+	// Function Core.Object.Percent_FloatFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Percent_FloatFloat_Params params;
-	params.A = A;
-	params.B = B;
+	float UObject::STATIC_Percent_FloatFloat(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Percent_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Percent_FloatFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Divide_FloatFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Divide_FloatFloat(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Divide_FloatFloat");
+	// Function Core.Object.Divide_FloatFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Divide_FloatFloat_Params params;
-	params.A = A;
-	params.B = B;
+	float UObject::STATIC_Divide_FloatFloat(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Divide_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Divide_FloatFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Multiply_FloatFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Multiply_FloatFloat(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_FloatFloat");
+	// Function Core.Object.Multiply_FloatFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Multiply_FloatFloat_Params params;
-	params.A = A;
-	params.B = B;
+	float UObject::STATIC_Multiply_FloatFloat(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Multiply_FloatFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.MultiplyMultiply_FloatFloat
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          B                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_MultiplyMultiply_FloatFloat(float A, float B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyMultiply_FloatFloat");
+	// Function Core.Object.MultiplyMultiply_FloatFloat
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          B                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_MultiplyMultiply_FloatFloat_Params params;
-	params.A = A;
-	params.B = B;
+	float UObject::STATIC_MultiplyMultiply_FloatFloat(float A, float B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyMultiply_FloatFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_MultiplyMultiply_FloatFloat_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Subtract_PreFloat
-// (Final, PreOperator, Native, Operator, Static, Public)
-// Parameters:
-// float                          A                              (Parm)
-// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-float UObject::STATIC_Subtract_PreFloat(float A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_PreFloat");
+	// Function Core.Object.Subtract_PreFloat
+	// (Final, PreOperator, Native, Operator, Static, Public)
+	// Parameters:
+	// float                          A                              (Parm)
+	// float                          ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Subtract_PreFloat_Params params;
-	params.A = A;
+	float UObject::STATIC_Subtract_PreFloat(float A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_PreFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Subtract_PreFloat_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.ToHex
-// (Final, Native, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-struct FString UObject::STATIC_ToHex(int A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ToHex");
+	// Function Core.Object.ToHex
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// struct FString                 ReturnValue                    (Parm, OutParm, ReturnParm, NeedCtorLink)
 
-	UObject_ToHex_Params params;
-	params.A = A;
+	struct FString UObject::STATIC_ToHex(int A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.ToHex");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_ToHex_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Clamp
-// (Final, Native, Static, Public)
-// Parameters:
-// int                            V                              (Parm)
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_Clamp(int V, int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Clamp");
+	// Function Core.Object.Clamp
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// int                            V                              (Parm)
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Clamp_Params params;
-	params.V = V;
-	params.A = A;
-	params.B = B;
+	int UObject::STATIC_Clamp(int V, int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Clamp");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Clamp_Params params;
+		params.V = V;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Max
-// (Final, Native, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_Max(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Max");
+	// Function Core.Object.Max
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Max_Params params;
-	params.A = A;
-	params.B = B;
+	int UObject::STATIC_Max(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Max");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Max_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Min
-// (Final, Native, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_Min(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Min");
+	// Function Core.Object.Min
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Min_Params params;
-	params.A = A;
-	params.B = B;
+	int UObject::STATIC_Min(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Min");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Min_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Rand
-// (Final, Native, Static, Public)
-// Parameters:
-// int                            Max                            (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_Rand(int Max)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Rand");
+	// Function Core.Object.Rand
+	// (Final, Native, Static, Public)
+	// Parameters:
+	// int                            Max                            (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Rand_Params params;
-	params.Max = Max;
+	int UObject::STATIC_Rand(int Max)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Rand");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Rand_Params params;
+		params.Max = Max;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.SubtractSubtract_Int
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// int                            A                              (Parm, OutParm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_SubtractSubtract_Int(int* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractSubtract_Int");
+	// Function Core.Object.SubtractSubtract_Int
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// int                            A                              (Parm, OutParm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_SubtractSubtract_Int_Params params;
+	int UObject::STATIC_SubtractSubtract_Int(int* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractSubtract_Int");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_SubtractSubtract_Int_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.AddAdd_Int
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// int                            A                              (Parm, OutParm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_AddAdd_Int(int* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddAdd_Int");
+	// Function Core.Object.AddAdd_Int
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// int                            A                              (Parm, OutParm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_AddAdd_Int_Params params;
+	int UObject::STATIC_AddAdd_Int(int* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddAdd_Int");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_AddAdd_Int_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.SubtractSubtract_PreInt
-// (Final, PreOperator, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// int                            A                              (Parm, OutParm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_SubtractSubtract_PreInt(int* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractSubtract_PreInt");
+	// Function Core.Object.SubtractSubtract_PreInt
+	// (Final, PreOperator, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// int                            A                              (Parm, OutParm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_SubtractSubtract_PreInt_Params params;
+	int UObject::STATIC_SubtractSubtract_PreInt(int* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractSubtract_PreInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_SubtractSubtract_PreInt_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.AddAdd_PreInt
-// (Final, PreOperator, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// int                            A                              (Parm, OutParm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_AddAdd_PreInt(int* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddAdd_PreInt");
+	// Function Core.Object.AddAdd_PreInt
+	// (Final, PreOperator, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// int                            A                              (Parm, OutParm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_AddAdd_PreInt_Params params;
+	int UObject::STATIC_AddAdd_PreInt(int* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddAdd_PreInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_AddAdd_PreInt_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.SubtractEqual_IntInt
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// int                            A                              (Parm, OutParm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_SubtractEqual_IntInt(int B, int* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractEqual_IntInt");
+	// Function Core.Object.SubtractEqual_IntInt
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// int                            A                              (Parm, OutParm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_SubtractEqual_IntInt_Params params;
-	params.B = B;
+	int UObject::STATIC_SubtractEqual_IntInt(int B, int* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractEqual_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_SubtractEqual_IntInt_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.AddEqual_IntInt
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// int                            A                              (Parm, OutParm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_AddEqual_IntInt(int B, int* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddEqual_IntInt");
+	// Function Core.Object.AddEqual_IntInt
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// int                            A                              (Parm, OutParm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_AddEqual_IntInt_Params params;
-	params.B = B;
+	int UObject::STATIC_AddEqual_IntInt(int B, int* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddEqual_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_AddEqual_IntInt_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.DivideEqual_IntFloat
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// int                            A                              (Parm, OutParm)
-// float                          B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_DivideEqual_IntFloat(float B, int* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DivideEqual_IntFloat");
+	// Function Core.Object.DivideEqual_IntFloat
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// int                            A                              (Parm, OutParm)
+	// float                          B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_DivideEqual_IntFloat_Params params;
-	params.B = B;
+	int UObject::STATIC_DivideEqual_IntFloat(float B, int* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DivideEqual_IntFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_DivideEqual_IntFloat_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.MultiplyEqual_IntFloat
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// int                            A                              (Parm, OutParm)
-// float                          B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_MultiplyEqual_IntFloat(float B, int* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyEqual_IntFloat");
+	// Function Core.Object.MultiplyEqual_IntFloat
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// int                            A                              (Parm, OutParm)
+	// float                          B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_MultiplyEqual_IntFloat_Params params;
-	params.B = B;
+	int UObject::STATIC_MultiplyEqual_IntFloat(float B, int* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyEqual_IntFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_MultiplyEqual_IntFloat_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Or_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_Or_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Or_IntInt");
+	// Function Core.Object.Or_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Or_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	int UObject::STATIC_Or_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Or_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Or_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Xor_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_Xor_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Xor_IntInt");
+	// Function Core.Object.Xor_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Xor_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	int UObject::STATIC_Xor_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Xor_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Xor_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.And_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_And_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.And_IntInt");
+	// Function Core.Object.And_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_And_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	int UObject::STATIC_And_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.And_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_And_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.NotEqual_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_NotEqual_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_IntInt");
+	// Function Core.Object.NotEqual_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_NotEqual_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_NotEqual_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_NotEqual_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.EqualEqual_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_EqualEqual_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_IntInt");
+	// Function Core.Object.EqualEqual_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_EqualEqual_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_EqualEqual_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_EqualEqual_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GreaterEqual_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_GreaterEqual_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GreaterEqual_IntInt");
+	// Function Core.Object.GreaterEqual_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GreaterEqual_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_GreaterEqual_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GreaterEqual_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GreaterEqual_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.LessEqual_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_LessEqual_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.LessEqual_IntInt");
+	// Function Core.Object.LessEqual_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_LessEqual_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_LessEqual_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.LessEqual_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_LessEqual_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Greater_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_Greater_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Greater_IntInt");
+	// Function Core.Object.Greater_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Greater_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_Greater_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Greater_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Greater_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Less_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_Less_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Less_IntInt");
+	// Function Core.Object.Less_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Less_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_Less_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Less_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Less_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GreaterGreaterGreater_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_GreaterGreaterGreater_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GreaterGreaterGreater_IntInt");
+	// Function Core.Object.GreaterGreaterGreater_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GreaterGreaterGreater_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	int UObject::STATIC_GreaterGreaterGreater_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GreaterGreaterGreater_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GreaterGreaterGreater_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.GreaterGreater_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_GreaterGreater_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GreaterGreater_IntInt");
+	// Function Core.Object.GreaterGreater_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_GreaterGreater_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	int UObject::STATIC_GreaterGreater_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.GreaterGreater_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_GreaterGreater_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.LessLess_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_LessLess_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.LessLess_IntInt");
+	// Function Core.Object.LessLess_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_LessLess_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	int UObject::STATIC_LessLess_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.LessLess_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_LessLess_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Subtract_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_Subtract_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_IntInt");
+	// Function Core.Object.Subtract_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Subtract_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	int UObject::STATIC_Subtract_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Subtract_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Add_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_Add_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Add_IntInt");
+	// Function Core.Object.Add_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Add_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	int UObject::STATIC_Add_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Add_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Add_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Divide_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_Divide_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Divide_IntInt");
+	// Function Core.Object.Divide_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Divide_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	int UObject::STATIC_Divide_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Divide_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Divide_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Multiply_IntInt
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            B                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_Multiply_IntInt(int A, int B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_IntInt");
+	// Function Core.Object.Multiply_IntInt
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            B                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Multiply_IntInt_Params params;
-	params.A = A;
-	params.B = B;
+	int UObject::STATIC_Multiply_IntInt(int A, int B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Multiply_IntInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Multiply_IntInt_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Subtract_PreInt
-// (Final, PreOperator, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_Subtract_PreInt(int A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_PreInt");
+	// Function Core.Object.Subtract_PreInt
+	// (Final, PreOperator, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Subtract_PreInt_Params params;
-	params.A = A;
+	int UObject::STATIC_Subtract_PreInt(int A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Subtract_PreInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Subtract_PreInt_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Complement_PreInt
-// (Final, PreOperator, Native, Operator, Static, Public)
-// Parameters:
-// int                            A                              (Parm)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UObject::STATIC_Complement_PreInt(int A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Complement_PreInt");
+	// Function Core.Object.Complement_PreInt
+	// (Final, PreOperator, Native, Operator, Static, Public)
+	// Parameters:
+	// int                            A                              (Parm)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Complement_PreInt_Params params;
-	params.A = A;
+	int UObject::STATIC_Complement_PreInt(int A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Complement_PreInt");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Complement_PreInt_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.SubtractSubtract_Byte
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// unsigned char                  A                              (Parm, OutParm)
-// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-unsigned char UObject::STATIC_SubtractSubtract_Byte(unsigned char* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractSubtract_Byte");
+	// Function Core.Object.SubtractSubtract_Byte
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// unsigned char                  A                              (Parm, OutParm)
+	// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_SubtractSubtract_Byte_Params params;
+	unsigned char UObject::STATIC_SubtractSubtract_Byte(unsigned char* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractSubtract_Byte");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_SubtractSubtract_Byte_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.AddAdd_Byte
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// unsigned char                  A                              (Parm, OutParm)
-// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-unsigned char UObject::STATIC_AddAdd_Byte(unsigned char* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddAdd_Byte");
+	// Function Core.Object.AddAdd_Byte
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// unsigned char                  A                              (Parm, OutParm)
+	// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_AddAdd_Byte_Params params;
+	unsigned char UObject::STATIC_AddAdd_Byte(unsigned char* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddAdd_Byte");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_AddAdd_Byte_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.SubtractSubtract_PreByte
-// (Final, PreOperator, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// unsigned char                  A                              (Parm, OutParm)
-// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-unsigned char UObject::STATIC_SubtractSubtract_PreByte(unsigned char* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractSubtract_PreByte");
+	// Function Core.Object.SubtractSubtract_PreByte
+	// (Final, PreOperator, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// unsigned char                  A                              (Parm, OutParm)
+	// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_SubtractSubtract_PreByte_Params params;
+	unsigned char UObject::STATIC_SubtractSubtract_PreByte(unsigned char* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractSubtract_PreByte");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_SubtractSubtract_PreByte_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.AddAdd_PreByte
-// (Final, PreOperator, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// unsigned char                  A                              (Parm, OutParm)
-// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-unsigned char UObject::STATIC_AddAdd_PreByte(unsigned char* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddAdd_PreByte");
+	// Function Core.Object.AddAdd_PreByte
+	// (Final, PreOperator, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// unsigned char                  A                              (Parm, OutParm)
+	// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_AddAdd_PreByte_Params params;
+	unsigned char UObject::STATIC_AddAdd_PreByte(unsigned char* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddAdd_PreByte");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_AddAdd_PreByte_Params params;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.SubtractEqual_ByteByte
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// unsigned char                  A                              (Parm, OutParm)
-// unsigned char                  B                              (Parm)
-// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-unsigned char UObject::STATIC_SubtractEqual_ByteByte(unsigned char B, unsigned char* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractEqual_ByteByte");
+	// Function Core.Object.SubtractEqual_ByteByte
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// unsigned char                  A                              (Parm, OutParm)
+	// unsigned char                  B                              (Parm)
+	// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_SubtractEqual_ByteByte_Params params;
-	params.B = B;
+	unsigned char UObject::STATIC_SubtractEqual_ByteByte(unsigned char B, unsigned char* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.SubtractEqual_ByteByte");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_SubtractEqual_ByteByte_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.AddEqual_ByteByte
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// unsigned char                  A                              (Parm, OutParm)
-// unsigned char                  B                              (Parm)
-// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-unsigned char UObject::STATIC_AddEqual_ByteByte(unsigned char B, unsigned char* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddEqual_ByteByte");
+	// Function Core.Object.AddEqual_ByteByte
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// unsigned char                  A                              (Parm, OutParm)
+	// unsigned char                  B                              (Parm)
+	// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_AddEqual_ByteByte_Params params;
-	params.B = B;
+	unsigned char UObject::STATIC_AddEqual_ByteByte(unsigned char B, unsigned char* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AddEqual_ByteByte");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_AddEqual_ByteByte_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.DivideEqual_ByteByte
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// unsigned char                  A                              (Parm, OutParm)
-// unsigned char                  B                              (Parm)
-// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-unsigned char UObject::STATIC_DivideEqual_ByteByte(unsigned char B, unsigned char* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DivideEqual_ByteByte");
+	// Function Core.Object.DivideEqual_ByteByte
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// unsigned char                  A                              (Parm, OutParm)
+	// unsigned char                  B                              (Parm)
+	// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_DivideEqual_ByteByte_Params params;
-	params.B = B;
+	unsigned char UObject::STATIC_DivideEqual_ByteByte(unsigned char B, unsigned char* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.DivideEqual_ByteByte");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_DivideEqual_ByteByte_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.MultiplyEqual_ByteFloat
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// unsigned char                  A                              (Parm, OutParm)
-// float                          B                              (Parm)
-// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-unsigned char UObject::STATIC_MultiplyEqual_ByteFloat(float B, unsigned char* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyEqual_ByteFloat");
+	// Function Core.Object.MultiplyEqual_ByteFloat
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// unsigned char                  A                              (Parm, OutParm)
+	// float                          B                              (Parm)
+	// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_MultiplyEqual_ByteFloat_Params params;
-	params.B = B;
+	unsigned char UObject::STATIC_MultiplyEqual_ByteFloat(float B, unsigned char* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyEqual_ByteFloat");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_MultiplyEqual_ByteFloat_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.MultiplyEqual_ByteByte
-// (Final, Native, Operator, Static, Public, HasOutParms)
-// Parameters:
-// unsigned char                  A                              (Parm, OutParm)
-// unsigned char                  B                              (Parm)
-// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-unsigned char UObject::STATIC_MultiplyEqual_ByteByte(unsigned char B, unsigned char* A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyEqual_ByteByte");
+	// Function Core.Object.MultiplyEqual_ByteByte
+	// (Final, Native, Operator, Static, Public, HasOutParms)
+	// Parameters:
+	// unsigned char                  A                              (Parm, OutParm)
+	// unsigned char                  B                              (Parm)
+	// unsigned char                  ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_MultiplyEqual_ByteByte_Params params;
-	params.B = B;
+	unsigned char UObject::STATIC_MultiplyEqual_ByteByte(unsigned char B, unsigned char* A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.MultiplyEqual_ByteByte");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_MultiplyEqual_ByteByte_Params params;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	if (A != nullptr)
-		*A = params.A;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		if (A != nullptr)
+			*A = params.A;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.OrOr_BoolBool
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// bool                           A                              (Parm)
-// bool                           B                              (Parm, SkipParm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_OrOr_BoolBool(bool A, bool B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.OrOr_BoolBool");
+	// Function Core.Object.OrOr_BoolBool
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// bool                           A                              (Parm)
+	// bool                           B                              (Parm, SkipParm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_OrOr_BoolBool_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_OrOr_BoolBool(bool A, bool B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.OrOr_BoolBool");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_OrOr_BoolBool_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.XorXor_BoolBool
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// bool                           A                              (Parm)
-// bool                           B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_XorXor_BoolBool(bool A, bool B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.XorXor_BoolBool");
+	// Function Core.Object.XorXor_BoolBool
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// bool                           A                              (Parm)
+	// bool                           B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_XorXor_BoolBool_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_XorXor_BoolBool(bool A, bool B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.XorXor_BoolBool");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_XorXor_BoolBool_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.AndAnd_BoolBool
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// bool                           A                              (Parm)
-// bool                           B                              (Parm, SkipParm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_AndAnd_BoolBool(bool A, bool B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AndAnd_BoolBool");
+	// Function Core.Object.AndAnd_BoolBool
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// bool                           A                              (Parm)
+	// bool                           B                              (Parm, SkipParm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_AndAnd_BoolBool_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_AndAnd_BoolBool(bool A, bool B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.AndAnd_BoolBool");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_AndAnd_BoolBool_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.NotEqual_BoolBool
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// bool                           A                              (Parm)
-// bool                           B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_NotEqual_BoolBool(bool A, bool B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_BoolBool");
+	// Function Core.Object.NotEqual_BoolBool
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// bool                           A                              (Parm)
+	// bool                           B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_NotEqual_BoolBool_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_NotEqual_BoolBool(bool A, bool B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.NotEqual_BoolBool");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_NotEqual_BoolBool_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.EqualEqual_BoolBool
-// (Final, Native, Operator, Static, Public)
-// Parameters:
-// bool                           A                              (Parm)
-// bool                           B                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_EqualEqual_BoolBool(bool A, bool B)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_BoolBool");
+	// Function Core.Object.EqualEqual_BoolBool
+	// (Final, Native, Operator, Static, Public)
+	// Parameters:
+	// bool                           A                              (Parm)
+	// bool                           B                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_EqualEqual_BoolBool_Params params;
-	params.A = A;
-	params.B = B;
+	bool UObject::STATIC_EqualEqual_BoolBool(bool A, bool B)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.EqualEqual_BoolBool");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_EqualEqual_BoolBool_Params params;
+		params.A = A;
+		params.B = B;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Object.Not_PreBool
-// (Final, PreOperator, Native, Operator, Static, Public)
-// Parameters:
-// bool                           A                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UObject::STATIC_Not_PreBool(bool A)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Not_PreBool");
+	// Function Core.Object.Not_PreBool
+	// (Final, PreOperator, Native, Operator, Static, Public)
+	// Parameters:
+	// bool                           A                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-	UObject_Not_PreBool_Params params;
-	params.A = A;
+	bool UObject::STATIC_Not_PreBool(bool A)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Object.Not_PreBool");
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		UObject_Not_PreBool_Params params;
+		params.A = A;
 
-	UObject::ProcessEvent(fn, &params);
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	fn->FunctionFlags = flags;
+		UObject::ProcessEvent(fn, &params);
 
-	return params.ReturnValue;
-}
+		fn->FunctionFlags = flags;
 
+		return params.ReturnValue;
+	}
 
-// Function Core.Commandlet.Main
-// (Native, Event, Public)
-// Parameters:
-// struct FString                 Params                         (Parm, NeedCtorLink)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
+	// Function Core.Commandlet.Main
+	// (Native, Event, Public)
+	// Parameters:
+	// struct FString                 Params                         (Parm, NeedCtorLink)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UCommandlet::Main(const struct FString& Params)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.Commandlet.Main");
+	int UCommandlet::Main(const struct FString& Params)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.Commandlet.Main");
 
-	UCommandlet_Main_Params params;
-	params.Params = Params;
+		UCommandlet_Main_Params params;
+		params.Params = Params;
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	UObject::ProcessEvent(fn, &params);
+		UObject::ProcessEvent(fn, &params);
 
-	fn->FunctionFlags = flags;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		return params.ReturnValue;
+	}
 
 
-// Function Core.HelpCommandlet.Main
-// (Native, Event, Public)
-// Parameters:
-// struct FString                 Params                         (Parm, NeedCtorLink)
-// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
+	// Function Core.HelpCommandlet.Main
+	// (Native, Event, Public)
+	// Parameters:
+	// struct FString                 Params                         (Parm, NeedCtorLink)
+	// int                            ReturnValue                    (Parm, OutParm, ReturnParm)
 
-int UHelpCommandlet::Main(const struct FString& Params)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.HelpCommandlet.Main");
+	int UHelpCommandlet::Main(const struct FString& Params)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.HelpCommandlet.Main");
 
-	UHelpCommandlet_Main_Params params;
-	params.Params = Params;
+		UHelpCommandlet_Main_Params params;
+		params.Params = Params;
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	UObject::ProcessEvent(fn, &params);
+		UObject::ProcessEvent(fn, &params);
 
-	fn->FunctionFlags = flags;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		return params.ReturnValue;
+	}
 
 
-// Function Core.BioTest.RunScript
-// (Defined, Public)
-// Parameters:
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
+	// Function Core.BioTest.RunScript
+	// (Defined, Public)
+	// Parameters:
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UBioTest::RunScript()
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.BioTest.RunScript");
+	bool UBioTest::RunScript()
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.BioTest.RunScript");
 
-	UBioTest_RunScript_Params params;
+		UBioTest_RunScript_Params params;
 
-	auto flags = fn->FunctionFlags;
+		auto flags = fn->FunctionFlags;
 
-	UObject::ProcessEvent(fn, &params);
+		UObject::ProcessEvent(fn, &params);
 
-	fn->FunctionFlags = flags;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		return params.ReturnValue;
+	}
 
 
-// Function Core.BioBaseTokenParser.GetStringToken
-// (Defined, Event, Static, Public, HasOutParms)
-// Parameters:
-// int                            nActionCode                    (Parm)
-// struct FString                 sToken                         (Parm, OutParm, NeedCtorLink)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
+	// Function Core.BioBaseTokenParser.GetStringToken
+	// (Defined, Event, Static, Public, HasOutParms)
+	// Parameters:
+	// int                            nActionCode                    (Parm)
+	// struct FString                 sToken                         (Parm, OutParm, NeedCtorLink)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UBioBaseTokenParser::STATIC_GetStringToken(int nActionCode, struct FString* sToken)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.BioBaseTokenParser.GetStringToken");
+	bool UBioBaseTokenParser::STATIC_GetStringToken(int nActionCode, struct FString* sToken)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.BioBaseTokenParser.GetStringToken");
 
-	UBioBaseTokenParser_GetStringToken_Params params;
-	params.nActionCode = nActionCode;
+		UBioBaseTokenParser_GetStringToken_Params params;
+		params.nActionCode = nActionCode;
 
-	auto flags = fn->FunctionFlags;
+		auto flags = fn->FunctionFlags;
 
-	UObject::ProcessEvent(fn, &params);
+		UObject::ProcessEvent(fn, &params);
 
-	fn->FunctionFlags = flags;
+		fn->FunctionFlags = flags;
 
-	if (sToken != nullptr)
-		*sToken = params.sToken;
+		if (sToken != nullptr)
+			*sToken = params.sToken;
 
-	return params.ReturnValue;
-}
+		return params.ReturnValue;
+	}
 
 
-// Function Core.BioBaseSaveObject.SaveBaseObjectInfo
-// (Native, Public)
-// Parameters:
-// class UObject*                 O                              (Parm)
-// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
+	// Function Core.BioBaseSaveObject.SaveBaseObjectInfo
+	// (Native, Public)
+	// Parameters:
+	// class UObject*                 O                              (Parm)
+	// bool                           ReturnValue                    (Parm, OutParm, ReturnParm)
 
-bool UBioBaseSaveObject::SaveBaseObjectInfo(class UObject* O)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.BioBaseSaveObject.SaveBaseObjectInfo");
+	bool UBioBaseSaveObject::SaveBaseObjectInfo(class UObject* O)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.BioBaseSaveObject.SaveBaseObjectInfo");
 
-	UBioBaseSaveObject_SaveBaseObjectInfo_Params params;
-	params.O = O;
+		UBioBaseSaveObject_SaveBaseObjectInfo_Params params;
+		params.O = O;
 
-	auto flags = fn->FunctionFlags;
-	fn->FunctionFlags |= 0x400;
+		auto flags = fn->FunctionFlags;
+		fn->FunctionFlags |= 0x400;
 
-	UObject::ProcessEvent(fn, &params);
+		UObject::ProcessEvent(fn, &params);
 
-	fn->FunctionFlags = flags;
+		fn->FunctionFlags = flags;
 
-	return params.ReturnValue;
-}
+		return params.ReturnValue;
+	}
 
 
-// Function Core.BioBaseSaveObject.LoadObject
-// (Public)
-// Parameters:
-// class UObject*                 O                              (Parm)
+	// Function Core.BioBaseSaveObject.LoadObject
+	// (Public)
+	// Parameters:
+	// class UObject*                 O                              (Parm)
 
-void UBioBaseSaveObject::LoadObject(class UObject* O)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.BioBaseSaveObject.LoadObject");
+	void UBioBaseSaveObject::LoadObject(class UObject* O)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.BioBaseSaveObject.LoadObject");
 
-	UBioBaseSaveObject_LoadObject_Params params;
-	params.O = O;
+		UBioBaseSaveObject_LoadObject_Params params;
+		params.O = O;
 
-	auto flags = fn->FunctionFlags;
+		auto flags = fn->FunctionFlags;
 
-	UObject::ProcessEvent(fn, &params);
+		UObject::ProcessEvent(fn, &params);
 
-	fn->FunctionFlags = flags;
-}
+		fn->FunctionFlags = flags;
+	}
 
 
-// Function Core.BioBaseSaveObject.SaveObject
-// (Defined, Public)
-// Parameters:
-// class UObject*                 O                              (Parm)
+	// Function Core.BioBaseSaveObject.SaveObject
+	// (Defined, Public)
+	// Parameters:
+	// class UObject*                 O                              (Parm)
 
-void UBioBaseSaveObject::SaveObject(class UObject* O)
-{
-	static auto fn = UObject::FindObject<UFunction>("Function Core.BioBaseSaveObject.SaveObject");
+	void UBioBaseSaveObject::SaveObject(class UObject* O)
+	{
+		static auto fn = UObject::FindObject<UFunction>("Function Core.BioBaseSaveObject.SaveObject");
 
-	UBioBaseSaveObject_SaveObject_Params params;
-	params.O = O;
+		UBioBaseSaveObject_SaveObject_Params params;
+		params.O = O;
 
-	auto flags = fn->FunctionFlags;
+		auto flags = fn->FunctionFlags;
 
-	UObject::ProcessEvent(fn, &params);
+		UObject::ProcessEvent(fn, &params);
 
-	fn->FunctionFlags = flags;
-}
+		fn->FunctionFlags = flags;
+	}
 
 
 }
 
 #ifdef _MSC_VER
-	#pragma pack(pop)
+#pragma pack(pop)
 #endif

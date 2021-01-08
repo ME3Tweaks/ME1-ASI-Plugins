@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ME1-SDK", "ME1-SDK", "{69B1
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StreamingLevelsHUD", "StreamingLevelsHUD\StreamingLevelsHUD.vcxproj", "{B60D6040-248E-472B-B5A6-DB5DDC77A2F0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ME1SDKLib", "ME1SDKLib\ME1SDKLib.vcxproj", "{62C52595-1409-49AF-B4C9-212293E82200}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -47,6 +49,14 @@ Global
 		{B60D6040-248E-472B-B5A6-DB5DDC77A2F0}.Release|x64.ActiveCfg = Release|Win32
 		{B60D6040-248E-472B-B5A6-DB5DDC77A2F0}.Release|x86.ActiveCfg = Release|Win32
 		{B60D6040-248E-472B-B5A6-DB5DDC77A2F0}.Release|x86.Build.0 = Release|Win32
+		{62C52595-1409-49AF-B4C9-212293E82200}.Debug|x64.ActiveCfg = Debug|x64
+		{62C52595-1409-49AF-B4C9-212293E82200}.Debug|x64.Build.0 = Debug|x64
+		{62C52595-1409-49AF-B4C9-212293E82200}.Debug|x86.ActiveCfg = Debug|Win32
+		{62C52595-1409-49AF-B4C9-212293E82200}.Debug|x86.Build.0 = Debug|Win32
+		{62C52595-1409-49AF-B4C9-212293E82200}.Release|x64.ActiveCfg = Release|x64
+		{62C52595-1409-49AF-B4C9-212293E82200}.Release|x64.Build.0 = Release|x64
+		{62C52595-1409-49AF-B4C9-212293E82200}.Release|x86.ActiveCfg = Release|Win32
+		{62C52595-1409-49AF-B4C9-212293E82200}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

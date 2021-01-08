@@ -10225,6 +10225,11 @@ void UCanvas::DrawText(const struct FString& Text, bool CR, float XScale, float 
 	fn->FunctionFlags = flags;
 }
 
+void UCanvas::DrawTextHACK(const struct FString& Text, bool CR, float XScale, float YScale)
+{
+	// Hack cause windows is dumb
+	DrawText(Text, CR, XScale, YScale);
+}
 
 // Function Engine.Canvas.TextSize
 // (Final, Native, Public, HasOutParms)

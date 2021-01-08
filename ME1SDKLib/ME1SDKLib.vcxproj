@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{c793f6bf-b81d-401d-adb9-ee94c60904b3}</ProjectGuid>
-    <RootNamespace>ME1SDK</RootNamespace>
+    <ProjectGuid>{62c52595-1409-49af-b4c9-212293e82200}</ProjectGuid>
+    <RootNamespace>ME1SDKLib</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -88,7 +88,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -144,25 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_Basic.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_BIOC_Base_functions.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_BIOC_Materials_functions.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_BIOC_VehicleResources_functions.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_BIOC_WorldResources_functions.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_BIOG_Design_functions.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_BIOG_Powers_functions.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_BIOG_StrategicAI_functions.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_Core_functions.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_Engine_functions.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_GameFramework_functions.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_IpDrv_functions.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_ISACTAudio_functions.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_PlotManagerMap_functions.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_PlotManager_functions.cpp" />
-    <ClCompile Include="..\ME1-SDK\SDK\ME1_WinDrv_functions.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\ME1-SDK\ME3TweaksHeader.h" />
+    <ClInclude Include="..\ME1-SDK\SDK.hpp" />
     <ClInclude Include="..\ME1-SDK\SDK\ME1_Basic.hpp" />
     <ClInclude Include="..\ME1-SDK\SDK\ME1_BIOC_Base_classes.hpp" />
     <ClInclude Include="..\ME1-SDK\SDK\ME1_BIOC_Base_parameters.hpp" />
@@ -209,6 +190,24 @@
     <ClInclude Include="..\ME1-SDK\SDK\ME1_WinDrv_classes.hpp" />
     <ClInclude Include="..\ME1-SDK\SDK\ME1_WinDrv_parameters.hpp" />
     <ClInclude Include="..\ME1-SDK\SDK\ME1_WinDrv_structs.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_Basic.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_BIOC_Base_functions.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_BIOC_Materials_functions.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_BIOC_VehicleResources_functions.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_BIOC_WorldResources_functions.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_BIOG_Design_functions.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_BIOG_Powers_functions.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_BIOG_StrategicAI_functions.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_Core_functions.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_Engine_functions.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_GameFramework_functions.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_IpDrv_functions.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_ISACTAudio_functions.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_PlotManagerMap_functions.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_PlotManager_functions.cpp" />
+    <ClCompile Include="..\ME1-SDK\SDK\ME1_WinDrv_functions.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

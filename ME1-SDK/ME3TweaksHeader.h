@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdio.h>
 #include <io.h>
 #include <fcntl.h>     /* for _O_TEXT and _O_BINARY */  
@@ -10,9 +12,6 @@
 #include <vector>
 #include "SDK.hpp"
 using namespace std;
-
-typedef void(__thiscall* tProcessEvent)(SDK::UObject*, SDK::UFunction*, void*, void*);
-tProcessEvent ProcessEvent = (tProcessEvent)0x10D3C960;
 
 const std::string string_format(const char* const zcFormat, ...) {
 

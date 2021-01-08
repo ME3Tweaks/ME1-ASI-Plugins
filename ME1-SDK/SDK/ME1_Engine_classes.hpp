@@ -2164,6 +2164,7 @@ public:
 	void DrawTextScaled(const struct FString& Text, float fXScale, float fYScale);
 	void DrawTextClipped(const struct FString& Text, bool bCheckHotKey, float XScale, float YScale);
 	void DrawText(const struct FString& Text, bool CR, float XScale, float YScale);
+	void DrawTextHACK(const struct FString& Text, bool CR, float XScale, float YScale);
 	void TextSize(const struct FString& String, float* XL, float* YL);
 	void StrLen(const struct FString& String, float* XL, float* YL);
 	void DrawMaterialTileClipped(class UMaterialInterface* Mat, float XL, float YL, float U, float V, float UL, float VL);

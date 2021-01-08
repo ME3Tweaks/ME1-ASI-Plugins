@@ -6,6 +6,7 @@
 #include "..\ME1-SDK\ME3TweaksHeader.h"
 #include "..\detours\detours.h"
 
+
 #define _CRT_SECURE_NO_WARNINGS
 #pragma comment(lib, "detours.lib") //Library needed for Hooking part.
 
@@ -29,7 +30,7 @@ static void RenderTextSLH(std::wstring msg, const float x, const float y, const 
 {
 	can->SetDrawColor(r, g, b, alpha * 255);
 	can->SetPos(x, y + 64); //+ is Y start. To prevent overlay on top of the power bar thing
-	can->DrawText(SDK::FString(msg.data()), 1, 1.0f, 1.0f);
+	can->DrawTextHACK(SDK::FString(msg.data()), true, 1.0f, 1.0f);
 }
 
 const char* FormatBytes(size_t bytes, char* keepInStackStr)
@@ -51,6 +52,7 @@ static string hudFuncName = std::string("Function BIOC_Base.BioHUD.PostRender");
 void __fastcall HookedPE(SDK::UObject* pObject, void* edx, SDK::UFunction* pFunction, void* pParms, void* pResult)
 {
 	string funcName = pFunction->GetFullName();
+	pFunction->GetFullName();
 	if (funcName.compare(hudFuncName) == 0)
 	{
 		currentCritTick++;
@@ -183,7 +185,7 @@ void __fastcall HookedPE(SDK::UObject* pObject, void* edx, SDK::UFunction* pFunc
 	}
 
 	//}
-	ProcessEvent(pObject, pFunction, pParms, pResult);
+	pObject->ProcessEvent(pFunction, pParms, pResult);
 }
 
 
@@ -192,7 +194,7 @@ void onAttach()
 {
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread()); //This command set the current working thread to the game current thread.
-	DetourAttach(&(PVOID&)ProcessEvent, HookedPE); //This command will start your Hook.
+	DetourAttach(&(PVOID&)SDK::ProcessEvent, HookedPE); //This command will start your Hook.
 	DetourTransactionCommit();
 }
 

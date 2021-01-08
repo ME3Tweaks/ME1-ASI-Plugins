@@ -8,8 +8,8 @@
 
 namespace SDK
 {
-TArray<FNameEntry*>* FName::GNames = nullptr;
-TArray<UObject*>* UObject::GObjects = nullptr;
+TArray<FNameEntry*>* FName::GNames = nullptr; // Are these supposed to be set?
+TArray<UObject*>* UObject::GObjects = nullptr; // Are these supposed to be set?
 }
 
 #ifdef _MSC_VER
